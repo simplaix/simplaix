@@ -68,7 +68,7 @@ export async function loadTools(
     toolset.clients[serverName] = client;
 
     const toolList = await client.listTools();
-    
+
     for (const tool of toolList.tools) {
       const toolName = tool.name !== serverName ? tool.name : tool.name;
       toolset.tools[toolName] = mapToolToToolset(

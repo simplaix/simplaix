@@ -211,8 +211,8 @@ export function MailDisplay({ mail }: MailDisplayProps) {
             )}
           </div>
           <Separator />
-          <div 
-            className="flex flex-1 overflow-auto p-4 text-sm w-full break-words max-w-full [&_img]:max-w-full [&_img]:h-auto [&_*]:max-w-full md:px-6 lg:px-8" 
+          <div
+            className="flex flex-1 overflow-auto p-4 text-sm w-full break-words max-w-full [&_img]:max-w-full [&_img]:h-auto [&_*]:max-w-full md:px-6 lg:px-8"
             dangerouslySetInnerHTML={{ __html: mail.htmlBody }}
           />
           <Separator className="mt-auto" />

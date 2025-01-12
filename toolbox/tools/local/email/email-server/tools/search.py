@@ -2,20 +2,17 @@ from __future__ import annotations
 
 import base64
 from email.utils import parseaddr, parsedate_to_datetime
-
 from typing import Any, Dict, List
 
+from models.email import Email
 from pydantic import Field
 
-from .account import (
-    build_gmail_service,
-    check_gmail_token_file,
-)
-from mcp.types import CallToolResult, TextContent
-from models.email import Email
+from .account import build_gmail_service, check_gmail_token_file
 
 
-def _parse_messages(gmail_service, messages: List[Dict[str, Any]]) -> List[Email]:
+def _parse_messages(
+    gmail_service, messages: List[Dict[str, Any]]
+) -> List[Email]:
     results = []
     for message in messages:
         message_id = message["id"]
@@ -79,7 +76,9 @@ def search_messages(
 ) -> List[Dict]:
     """Search for messages in Gmail."""
     if not check_gmail_token_file():
-        raise ValueError("No valid token file found. Please login to Gmail first.")
+        raise ValueError(
+            "No valid token file found. Please login to Gmail first."
+        )
     gmail_service = build_gmail_service()
     results = (
         gmail_service.users()

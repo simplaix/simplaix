@@ -1,5 +1,8 @@
-from typing import List, Optional
+from __future__ import annotations
+
 import uuid
+from typing import List, Optional
+
 from models.draft import Draft, Recipients  # Add import for models
 
 
