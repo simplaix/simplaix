@@ -1,0 +1,43 @@
+[project]
+name = "email-server"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "google-api-python-client==2.156.0",
+    "google-auth-oauthlib==1.2.1",
+    "httpx>=0.28.1",
+    "mcp[cli]>=1.2.0",
+    "pre-commit>=4.0.1",
+]
+[tool.black]
+line-length = 79
+target-version = ['py310']
+include = '\.pyi?$'
+exclude = '''
+
+(
+  /(
+      \.eggs         # exclude a few common directories in the
+    | \.git          # root of the project
+    | \.hg
+    | \.mypy_cache
+    | \.tox
+    | \.venv
+    | _build
+    | buck-out
+    | build
+    | dist
+    | data
+    | venv
+    | tmp
+    | notebooks
+  )/
+)
+'''
+
+[tool.isort]
+profile = "hug"
+line_length = 79
+src_paths = ["src", "tests"]
