@@ -56,28 +56,54 @@ Your app application should now be running on [localhost:3000](http://localhost:
 ```mermaid
 graph TD
     %% Enhanced Modern Styling with better contrast
-    classDef client fill:#16a34a,stroke:#15803d,stroke-width:2px,color:#ffffff
-    classDef gateway fill:#0284c7,stroke:#0369a1,stroke-width:2px,color:#ffffff
-    classDef backend fill:#ea580c,stroke:#c2410c,stroke-width:2px,color:#ffffff
-    classDef resource fill:#7c3aed,stroke:#6d28d9,stroke-width:2px,color:#ffffff
-    classDef server fill:#0284c7,stroke:#0369a1,stroke-width:2px,color:#ffffff
+    classDef client fill:#10b981,stroke:#059669,stroke-width:2px,color:#ffffff,font-size:14px
+    classDef gateway fill:#3b82f6,stroke:#2563eb,stroke-width:2px,color:#ffffff,font-size:14px
+    classDef backend fill:#f97316,stroke:#ea580c,stroke-width:2px,color:#ffffff,font-size:14px
+    classDef resource fill:#8b5cf6,stroke:#7c3aed,stroke-width:2px,color:#ffffff,font-size:14px
+    classDef server fill:#2563eb,stroke:#1d4ed8,stroke-width:2px,color:#ffffff,font-size:14px
 
     linkStyle default stroke:#475569,stroke-width:2px,stroke-dasharray: 4 4,opacity:0.85
 
-    %% Proposed MCP Architecture (Decoupled)
-    subgraph Proposed["Proposed Architecture (Remote)"]
-        direction LR
-        subgraph Local["Local env"]
-            D[Client/Host]:::client -->|"MCP Protocol"| E["MCP Proxy"]:::server
-            D[Client/Host]:::client -->|"MCP Protocol"| E2["Local MCP servers"]
-        end
-        E <-->|"tRPC(HTTP)"| F["Remote MCP Server (@remote-mcp/server)"]:::backend
+    %% Define graph direction
+    direction LR
 
-        %% Separated Resources
-        F -->|"DB Access"| G1[DB]:::resource
-        F -->|"API Access"| G2["Web API 1"]:::resource
-        F -->|"API Access"| G3["Web API 2"]:::resource
+    %% Client/Host
+    D[Client/Host]:::client
+
+    %% Local Environment
+    subgraph Local["Local Environment"]
+        direction TB
+        D -->|"MCP Protocol"| E["MCP Proxy"]:::server
+        D -->|"MCP Protocol"| E2["Local MCP Servers"]:::server
+
+        subgraph AITools["AI Tools"]
+            E2
+            E
+        end
     end
+
+    %% Remote Server
+
+    subgraph AIToolsRemote["AI Tools (Remote)"]
+        E <-->|"HTTP"| F["Remote MCP Server"]:::backend
+    end
+    subgraph HumanTools["Human Tools"]
+        D <-->|"HTTP"| F2["Remote Human Tools Server"]:::server
+    end
+
+    %% Arrange Resources Equally
+    subgraph Resources["External Services"]
+        direction TB
+        G1[Database]:::resource
+        G2["Web API 1"]:::resource
+        G3["Web API 2"]:::resource
+        ...:::resource
+    end
+    %% Resources
+    AIToolsRemote --> Resources
+    E2 --> Resources
+    HumanTools --> Resources
+
 ```
 
 # Contributing
