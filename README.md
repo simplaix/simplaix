@@ -87,9 +87,9 @@ graph TD
     subgraph AIToolsRemote["AI Tools (Remote)"]
         E <-->|"HTTP"| F["Remote MCP Server"]:::backend
     end
-    subgraph HumanTools["Human Tools"]
-        D <-->|"HTTP"| F2["Remote Human Tools Server"]:::server
-    end
+    %% subgraph HumanTools["Human Tools"]
+    %%     D <-->|"HTTP"| F2["Remote Human Tools Server"]:::server
+    %% end
 
     %% Arrange Resources Equally
     subgraph Resources["External Services"]
@@ -102,7 +102,7 @@ graph TD
     %% Resources
     AIToolsRemote --> Resources
     E2 --> Resources
-    HumanTools --> Resources
+    %% HumanTools --> Resources
 
 ```
 
