@@ -29,9 +29,9 @@ Modern software often requires users to navigate complex interfaces, perform rep
 - **Integrity:** Design agents to enable seamless integration of diverse software systems, achieving complex workflows in a unified and efficient manner.
 - **Decision-Driven Workflows & UI:** Redefine user experiences to emphasize strategic decision-making over operational tasks, fostering clarity and boosting productivity.
 
-# Why not vision-based "Computer Use" ?
+# Why not vision-based "Computer Use"?
 
-A simple answer is that a large amount of the components on a UI are designed for humans (e.g., buttons, inputs, etc...), a program (Agent) doesn't need a button to submit a request.
+A quick answer is that most UI components, such as buttons, are designed for human interaction. An AI Agent (computer program), however, doesn't need these visual elements to perform tasks or submit requests — it could interact directly with the underlying systems.
 
 # Simplaix platform
 
