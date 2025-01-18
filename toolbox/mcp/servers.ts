@@ -1,6 +1,7 @@
-import { LocalServerConfig, MCPServerConfig, MCPServers } from './types';
 import * as fs from 'fs/promises';
 import * as path from 'path';
+
+import { LocalServerConfig, MCPServerConfig, MCPServers } from './types';
 
 /**
  * Validates and registers MCP server configurations
