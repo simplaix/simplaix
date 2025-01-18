@@ -5,6 +5,7 @@ from tools.account import gmail_login
 from tools.draft import create_draft
 from tools.search import search_messages
 from tools.send import send_message
+
 # Initialize FastMCP server
 mcp = FastMCP("email")
 
