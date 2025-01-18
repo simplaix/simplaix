@@ -43,7 +43,7 @@ export function Chat({
   } = useChat({
     body: { id, modelId: selectedModelId },
     initialMessages,
-    maxToolRoundtrips: 1, 
+    // maxToolRoundtrips: 1, 
     onFinish: () => {
       window.history.replaceState({}, '', `/chat/${id}`);
     },
