@@ -5,6 +5,7 @@ from tools.account import gmail_login
 from tools.draft import create_draft
 from tools.search import search_messages
 from tools.send import send_message
+from tools.attachment import download_attachments
 
 # Initialize FastMCP server
 mcp = FastMCP("email")
@@ -14,6 +15,7 @@ mcp.add_tool(create_draft)
 mcp.add_tool(search_messages)
 mcp.add_tool(gmail_login)
 mcp.add_tool(send_message)
+mcp.add_tool(download_attachments)
 
 if __name__ == "__main__":
     # Initialize and run the local stdio server
