@@ -46,12 +46,7 @@ export async function POST(request: Request) {
     system: regularPrompt,
     messages: coreMessages,
     maxSteps: 5,
-    // experimental_activeTools: [
-    //   ...draftTools,
-    //   ...dataTransformTools,
-    //   ...emailTools,
-    // ],
-    // tools: initializeTools(streamingData, model, session),
+
     tools: toolSet.tools,
     onFinish: async ({ responseMessages }) => {
       console.log('onFinish called');

@@ -4,6 +4,7 @@ import { createMCPClient } from "./mcp/client";
 import { validateMCPServers, loadToolConfig } from "./mcp/servers";
 import { mapToolToToolset } from "./mcp/toolMapper";
 import { ToolSet, ToolSetConfig } from "./mcp/types";
+import { z } from "zod";
 
 // // Define allowed tools for different functionalities
 // type AllowedTools =
@@ -71,6 +72,7 @@ export async function loadTools(
 
     for (const tool of toolList.tools) {
       const toolName = tool.name !== serverName ? tool.name : tool.name;
+      
       toolset.tools[toolName] = mapToolToToolset(
         tool,
         serverName,
@@ -81,7 +83,15 @@ export async function loadTools(
     }
   }
 
-  console.log(toolset);
+  toolset.tools['askForConfirmation'] = {
+    // client-side tool that starts user interaction:
+      description: 'Ask the user for confirmation.',
+      parameters: z.object({
+        message: z.string().describe('The message to ask for confirmation.'),
+      }),
+  }
+
+  // console.log(toolset);
   return toolset;
 }
 

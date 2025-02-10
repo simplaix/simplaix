@@ -17,7 +17,11 @@ def download_attachments(
         output_dir: Optional directory to save attachments to (default: current directory)
         
     Returns:
-        Dict mapping message IDs to lists of attachment info dictionaries
+        Dict mapping message IDs to lists of attachment info dictionaries with:
+        - filename: name of the attachment
+        - path: local path where file was saved
+        - mimeType: MIME type of the attachment
+        - blob: base64-encoded attachment data
     """
     if not check_gmail_token_file():
         raise ValueError("No valid token file found. Please login to Gmail first.")
@@ -69,7 +73,7 @@ def download_attachments(
                             "filename": part["filename"],
                             "path": filepath,
                             "mimeType": part["mimeType"],
-                            "file_data": file_data
+                            "blob": attachment["data"]  # Original base64 data
                         })
                         
         results[message_id] = attachments

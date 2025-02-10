@@ -107,6 +107,8 @@ export const Message = ({
                     );
                   }
 
+                  if (toolName === 'askForConfirmation') {
+                  }
                   if (toolName === 'joinData') {
                     return (
                       <div
