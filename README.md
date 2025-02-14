@@ -24,7 +24,7 @@ Modern software often requires users to navigate complex interfaces, perform rep
 
 # Core Principles
 
-- **Agent First:** Redesign software functionalities to prioritize agent-led operation, canceling repetitive and routine tasks.
+- **Agent First:** Redesign software functionalities to prioritize agent-led operation in any scenario including temporary workflows.
 - **Natural Interaction:** Facilitate communication with software using natural language, reducing the learning curve for new tools.
 - **Integrity:** Design agents to enable seamless integration of diverse software systems, achieving complex workflows in a unified and efficient manner.
 - **Decision-Driven Workflows & UI:** Redefine user experiences to emphasize strategic decision-making over operational tasks, fostering clarity and boosting productivity.
