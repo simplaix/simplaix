@@ -1,51 +1,45 @@
-<a href="https://chat.vercel.ai/">
-  <img alt="Next.js 14 and App Router-ready AI chatbot." src="app/(chat)/opengraph-image.png">
-  <h1 align="center">Next.js AI Chatbot</h1>
-</a>
-
 <p align="center">
-  An Open-Source AI Chatbot Template Built With Next.js and the AI SDK by Vercel.
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="images/simplaix_logo.svg">
+    <source media="(prefers-color-scheme: light)" srcset="images/simplaix_logo.svg">
+    <img alt="Hugging Face Transformers Library" src="images/simplaix_logo.svg" width="400" height="200" style="max-width: 100%;">
+  </picture>
+  <br/>
+  <br/>
 </p>
 
-<p align="center">
-  <a href="#features"><strong>Features</strong></a> ·
-  <a href="#model-providers"><strong>Model Providers</strong></a> ·
-  <a href="#deploy-your-own"><strong>Deploy Your Own</strong></a> ·
-  <a href="#running-locally"><strong>Running locally</strong></a>
-</p>
-<br/>
+# Vision
 
-## Features
+Simplaix aims to revolutionize the way we interact with software tools by placing intelligent agents at the core of software design. By integrating software functionalities into agents and redesigning human-computer interactions, Simplaix aspires to liberate users from the role of software operators, enabling them to focus solely on decision-making.
 
-- [Next.js](https://nextjs.org) App Router
-  - Advanced routing for seamless navigation and performance
-  - React Server Components (RSCs) and Server Actions for server-side rendering and increased performance
-- [AI SDK](https://sdk.vercel.ai/docs)
-  - Unified API for generating text, structured objects, and tool calls with LLMs
-  - Hooks for building dynamic chat and generative user interfaces
-  - Supports OpenAI (default), Anthropic, Cohere, and other model providers
-- [shadcn/ui](https://ui.shadcn.com)
-  - Styling with [Tailwind CSS](https://tailwindcss.com)
-  - Component primitives from [Radix UI](https://radix-ui.com) for accessibility and flexibility
-- Data Persistence
-  - [Vercel Postgres powered by Neon](https://vercel.com/storage/postgres) for saving chat history and user data
-  - [Vercel Blob](https://vercel.com/storage/blob) for efficient file storage
-- [NextAuth.js](https://github.com/nextauthjs/next-auth)
-  - Simple and secure authentication
+# Overview
 
-## Model Providers
+Modern software often requires users to navigate complex interfaces, perform repetitive tasks, and possess specialized knowledge to fully utilize its capabilities. Simplaix transforms this paradigm by:
 
-This template ships with OpenAI `gpt-4o` as the default. However, with the [AI SDK](https://sdk.vercel.ai/docs), you can switch LLM providers to [OpenAI](https://openai.com), [Anthropic](https://anthropic.com), [Cohere](https://cohere.com/), and [many more](https://sdk.vercel.ai/providers/ai-sdk-providers) with just a few lines of code.
+1. **Agent-Centric Design:** Embedding software functionalities into intelligent agents that can understand natural language instructions, automate workflows, and provide actionable insights.
 
-## Deploy Your Own
+2. **Redesigned Interaction:** Shifting from manual operation to intuitive, conversational interactions, allowing users to delegate tasks to agents.
 
-You can deploy your own version of the Next.js AI Chatbot to Vercel with one click:
+3. **User Empowerment:** Enabling users to focus on strategic decisions rather than operational details, fostering creativity and efficiency.
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fai-chatbot&env=AUTH_SECRET,OPENAI_API_KEY&envDescription=Learn%20more%20about%20how%20to%20get%20the%20API%20Keys%20for%20the%20application&envLink=https%3A%2F%2Fgithub.com%2Fvercel%2Fai-chatbot%2Fblob%2Fmain%2F.env.example&demo-title=AI%20Chatbot&demo-description=An%20Open-Source%20AI%20Chatbot%20Template%20Built%20With%20Next.js%20and%20the%20AI%20SDK%20by%20Vercel.&demo-url=https%3A%2F%2Fchat.vercel.ai&stores=[{%22type%22:%22postgres%22},{%22type%22:%22blob%22}])
+# Core Principles
+
+- **Agent First:** Redesign software functionalities to prioritize agent-led operation in any scenario including temporary workflows.
+- **Natural Interaction:** Facilitate communication with software using natural language, reducing the learning curve for new tools.
+- **Integrity:** Design agents to enable seamless integration of diverse software systems, achieving complex workflows in a unified and efficient manner.
+- **Decision-Driven Workflows & UI:** Redefine user experiences to emphasize strategic decision-making over operational tasks, fostering clarity and boosting productivity.
+
+# Why not vision-based "Computer Use"?
+
+A quick answer is that most UI components, such as buttons, are designed for human interaction. An AI Agent (computer program), however, doesn't need these visual elements to perform tasks or submit requests — it could interact directly with the underlying systems.
+
+# Simplaix platform
+
+The Simplaix platform is developed by [Simplaix](https://simplaix.com). The opensource version is developed based on the [Next.js AI Chatbot Template](https://github.com/vercel/ai-chatbot).
 
 ## Running locally
 
-You will need to use the environment variables [defined in `.env.example`](.env.example) to run Next.js AI Chatbot. It's recommended you use [Vercel Environment Variables](https://vercel.com/docs/projects/environment-variables) for this, but a `.env` file is all that is necessary.
+You will need to use the environment variables [defined in `.env.example`](.env.example) to run Simplaix. It's recommended you use [Vercel Environment Variables](https://vercel.com/docs/projects/environment-variables) for this, but a `.env` file is all that is necessary.
 
 > Note: You should not commit your `.env` file or it will expose secrets that will allow others to control access to your various OpenAI and authentication provider accounts.
 
@@ -58,4 +52,68 @@ pnpm install
 pnpm dev
 ```
 
-Your app template should now be running on [localhost:3000](http://localhost:3000/).
+Your app application should now be running on [localhost:3000](http://localhost:3000/).
+
+
+## Architecture
+
+```mermaid
+graph TD
+    %% Enhanced Modern Styling with better contrast
+    classDef client fill:#10b981,stroke:#059669,stroke-width:2px,color:#ffffff,font-size:14px
+    classDef gateway fill:#3b82f6,stroke:#2563eb,stroke-width:2px,color:#ffffff,font-size:14px
+    classDef backend fill:#f97316,stroke:#ea580c,stroke-width:2px,color:#ffffff,font-size:14px
+    classDef resource fill:#8b5cf6,stroke:#7c3aed,stroke-width:2px,color:#ffffff,font-size:14px
+    classDef server fill:#2563eb,stroke:#1d4ed8,stroke-width:2px,color:#ffffff,font-size:14px
+
+    linkStyle default stroke:#475569,stroke-width:2px,stroke-dasharray: 4 4,opacity:0.85
+
+    %% Define graph direction
+    direction LR
+
+    %% Client/Host
+    D[Client/Host]:::client
+
+    %% Local Environment
+    subgraph Local["Local Environment"]
+        direction TB
+        D -->|"MCP Protocol"| E["MCP Proxy"]:::server
+        D -->|"MCP Protocol"| E2["Local MCP Servers"]:::server
+
+        subgraph AITools["AI Tools"]
+            E2
+            E
+        end
+    end
+
+    %% Remote Server
+
+    subgraph AIToolsRemote["AI Tools (Remote)"]
+        E <-->|"HTTP"| F["Remote MCP Server"]:::backend
+    end
+    %% subgraph HumanTools["Human Tools"]
+    %%     D <-->|"HTTP"| F2["Remote Human Tools Server"]:::server
+    %% end
+
+    %% Arrange Resources Equally
+    subgraph Resources["External Services"]
+        direction TB
+        G1[Database]:::resource
+        G2["Web API 1"]:::resource
+        G3["Web API 2"]:::resource
+        ...:::resource
+    end
+    %% Resources
+    AIToolsRemote --> Resources
+    E2 --> Resources
+    %% HumanTools --> Resources
+
+```
+
+# Contributing
+
+However you choose to contribute, please be mindful and respect our [code of conduct](CODE_OF_CONDUCT.md).
+
+# License
+
+Simplaix is open-source software licensed under the [Apache 2.0 License](https://github.com/simplaix/simplaix?tab=Apache-2.0-1-ov-file).
