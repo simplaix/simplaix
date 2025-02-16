@@ -24,8 +24,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
 import { MessageEditor } from './message-editor';
 import { DocumentPreview } from './document-preview';
 import { MessageReasoning } from './message-reasoning';
-import { DialogTrigger } from '../ui/dialog';
-import { Dialog, DialogContent, DialogTitle } from '../ui/dialog';
+import { DialogTrigger , Dialog, DialogContent, DialogTitle } from '../ui/dialog';
 import { EmailList } from '@/toolbox/tools/local/email/ui/email-ui/email-list';
 
 const JSONDialog = ({ result }: { result: any }) => {
