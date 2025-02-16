@@ -1,8 +1,8 @@
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="images/simplaix_logo.svg">
-    <source media="(prefers-color-scheme: light)" srcset="images/simplaix_logo.svg">
-    <img alt="Hugging Face Transformers Library" src="images/simplaix_logo.svg" width="400" height="200" style="max-width: 100%;">
+    <source media="(prefers-color-scheme: dark)" srcset="public/images/simplaix_logo.svg">
+    <source media="(prefers-color-scheme: light)" srcset="public/images/simplaix_logo.svg">
+    <img alt="Simplaix" src="public/images/simplaix_logo.svg" width="400" height="200" style="max-width: 100%;">
   </picture>
   <br/>
   <br/>
