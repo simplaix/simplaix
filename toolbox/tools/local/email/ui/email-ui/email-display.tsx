@@ -38,6 +38,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { EmailResult } from '@/toolbox/tools/local/email/types/email';
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 interface MailDisplayProps {
   mail: EmailResult | null;
 }
@@ -211,10 +212,13 @@ export function MailDisplay({ mail }: MailDisplayProps) {
             )}
           </div>
           <Separator />
+          <ScrollArea className="h-[600px]">  
           <div
             className="flex flex-1 overflow-auto p-4 text-sm w-full break-words max-w-full [&_img]:max-w-full [&_img]:h-auto [&_*]:max-w-full md:px-6 lg:px-8"
             dangerouslySetInnerHTML={{ __html: mail.htmlBody }}
           />
+           <ScrollBar orientation="vertical" className="h-full" />
+          </ScrollArea>
           <Separator className="mt-auto" />
           <div className="p-4">
             <form>

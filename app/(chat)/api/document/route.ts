@@ -1,9 +1,10 @@
 import { auth } from '@/app/(auth)/auth';
+import { BlockKind } from '@/components/base/block';
 import {
   deleteDocumentsByIdAfterTimestamp,
   getDocumentsById,
   saveDocument,
-} from '@/db/queries';
+} from '@/lib/db/queries';
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -48,21 +49,24 @@ export async function POST(request: Request) {
     return new Response('Unauthorized', { status: 401 });
   }
 
-  const { content, title }: { content: string; title: string } =
-    await request.json();
+  const {
+    content,
+    title,
+    kind,
+  }: { content: string; title: string; kind: BlockKind } = await request.json();
 
-  if (session.user && session.user.id) {
+  if (session.user?.id) {
     const document = await saveDocument({
       id,
       content,
       title,
+      kind,
       userId: session.user.id,
     });
 
     return Response.json(document, { status: 200 });
-  } else {
-    return new Response('Unauthorized', { status: 401 });
   }
+  return new Response('Unauthorized', { status: 401 });
 }
 
 export async function PATCH(request: Request) {

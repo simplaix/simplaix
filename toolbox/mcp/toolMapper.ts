@@ -1,7 +1,8 @@
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
-import { jsonSchema, StreamData } from 'ai';
+import { jsonSchema, DataStreamWriter } from 'ai';
 
 import { ToolDefinition, ToolSetConfig } from './types';
+import { generateUUID } from '@/lib/utils';
 
 
 function parseResult(result: any) {
@@ -17,7 +18,7 @@ export function mapToolToToolset(
   serverName: string,
   client: Client,
   config: ToolSetConfig,
-  streamingData: StreamData
+  streamingData: DataStreamWriter
 ): ToolDefinition {
   let toolName = tool.name;
   if (toolName !== serverName) {
@@ -31,6 +32,7 @@ export function mapToolToToolset(
       console.log('calling tool', toolName, args);
       try {
         const resultPromise = (async () => {
+          const toolResultId = generateUUID();
           const result = await client.callTool({
             name: tool.name,
             arguments: args,
@@ -41,17 +43,15 @@ export function mapToolToToolset(
           }
           const parsedResult = parseResult(result);
 
-          // console.log('parsedResult', parsedResult);
-
-          streamingData.append({
+          streamingData.writeData({
             type: `${toolName}_result`,
             content: parsedResult,
           });
-          return parsedResult;
+          return {toolResultId, data:parsedResult};
         })();
 
         if (config.onCallTool) {
-          config.onCallTool(serverName, toolName, args, resultPromise);
+          config.onCallTool(serverName, toolName, args, resultPromise as Promise<string>);
         }
 
         return resultPromise;

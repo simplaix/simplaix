@@ -36,20 +36,3 @@ yarn-error.log*
 .vercel
 .vscode
 .env*.local
-data/
-
-
-# Python-generated files
-__pycache__/
-*.py[oc]
-build/
-dist/
-wheels/
-*.egg-info
-
-# Virtual environments
-.venv
-
-#gmail
-credentials.json
-token.json

@@ -1,12 +1,12 @@
-import { Metadata } from 'next';
+import type { Metadata } from 'next';
 import { Toaster } from 'sonner';
 
-import { ThemeProvider } from '@/components/custom/theme-provider';
+import { ThemeProvider } from '@/components/base/theme-provider';
 
 import './globals.css';
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://chat.vercel.ai'),
+  metadataBase: new URL('https://simplaix.com'),
   title: 'Simplaix - Software of the next Era',
   description: 'Simplaix is the new way of using software',
 };
@@ -56,8 +56,7 @@ export default async function RootLayout({
           }}
         />
       </head>
-      {/* debug suppressHydrationWarning is necessary to avoid the React hydration mismatch warning. */}
-      <body className="antialiased" suppressHydrationWarning>
+      <body className="antialiased">
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
