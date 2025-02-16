@@ -12,7 +12,6 @@ import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
 import { DraftData } from '@/toolbox/tools/local/email/types/draft';
-import { sendEmail } from '@/utils/gmail';
 
 export function DraftInputs({
   className,
@@ -29,7 +28,6 @@ export function DraftInputs({
   const handleSendEmail = async () => {
     try {
       setIsSending(true);
-      await sendEmail(draft);
 
       toast.success('Email sent successfully');
       onClose();
