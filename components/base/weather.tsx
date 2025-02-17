@@ -4,7 +4,7 @@ import cx from 'classnames';
 import { format, isWithinInterval } from 'date-fns';
 import { useEffect, useState } from 'react';
 import { Button } from '../ui/button';
-import { useWeatherStore } from '../stores/weatherStore';
+import { useWeatherStore } from '../../toolbox/stores/weatherStore';
 import { UIContainer } from './ui-container';
 
 const COMPONENT_NAME = 'Weather';

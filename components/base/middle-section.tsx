@@ -5,9 +5,9 @@ import type { Attachment, Message } from 'ai';
 import { DocumentPreview } from './document-preview';
 import { Weather } from './weather';
 import { DialogTrigger , DialogContent, DialogTitle , Dialog } from '../ui/dialog';
-import { useWeatherStore } from '../stores/weatherStore';
-import { useEmailStore } from '../stores/emailStore';
-import { useUiVisiableStore } from '../stores/uiVisiableStore';
+import { useWeatherStore } from '../../toolbox/stores/weatherStore';
+import { useEmailStore } from '../../toolbox/stores/emailStore';
+import { useUiVisiableStore } from '../../toolbox/stores/uiVisiableStore';
 const JSONDialog = ({ result }: { result: any }) => {
   return (
     <Dialog>

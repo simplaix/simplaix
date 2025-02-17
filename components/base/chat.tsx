@@ -18,7 +18,7 @@ import { VisibilityType } from './visibility-selector';
 import { useBlockSelector } from '@/hooks/use-block';
 import { toast } from 'sonner';
 import { MiddleSection } from './middle-section';
-import { useWeatherStore } from '../stores/weatherStore';
+import { useWeatherStore } from '../../toolbox/stores/weatherStore';
 
 export function Chat({
   id,
