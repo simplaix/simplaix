@@ -3,6 +3,7 @@ import { formatDistanceToNow } from 'date-fns/formatDistanceToNow';
 
 import { cn } from '@/lib/utils';
 import { EmailResult } from '@/toolbox/tools/local/email/types/email';
+import { Button } from '../ui/button';
 
 interface EmailCardProps {
   email: EmailResult;
@@ -23,7 +24,7 @@ export function EmailCard({
   };
 
   return (
-    <button
+    <Button
       className={cn(
         'flex flex-col items-start gap-2 rounded-lg border p-3 text-left text-sm transition-all hover:bg-accent w-full',
         isSelected && 'bg-muted'
@@ -51,6 +52,6 @@ export function EmailCard({
       <div className="line-clamp-2 text-xs text-muted-foreground">
         <div dangerouslySetInnerHTML={{ __html: email.snippet }} />
       </div>
-    </button>
+    </Button>
   );
 }
