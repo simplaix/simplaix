@@ -26,6 +26,7 @@ import { DocumentPreview } from './document-preview';
 import { MessageReasoning } from './message-reasoning';
 import { DialogTrigger , Dialog, DialogContent, DialogTitle } from '../ui/dialog';
 import { EmailList } from '@/toolbox/tools/local/email/ui/email-ui/email-list';
+import { DraftInputs } from '@/toolbox/tools/local/email/ui/draft-ui/draft-inputs';
 
 const JSONDialog = ({ result }: { result: any }) => {
   return (
@@ -163,12 +164,11 @@ const PurePreviewMessage = ({
 
                   if (state === 'result') {
                     const { result } = toolInvocation;
-
-                    console.log('result', result);
                     return (
                       <div key={toolCallId}>
                         {toolName === 'getWeather' ? (
                           <Weather 
+                            toolResultId={result.toolResultId}
                             weatherAtLocation={result} 
                             isInline={true}
                           />
@@ -197,6 +197,13 @@ const PurePreviewMessage = ({
                             onClose={() => {}}
                             onSelect={(email) => {}}
                           />
+                        ) : toolName === 'create_draft' ? (
+                          <DraftInputs
+                            toolResultId={result.toolResultId}
+                            draftData={result.data[0]} // TODO: Get only first object from array, as currently mcp call only returns array of objects, according to this issue: https://github.com/modelcontextprotocol/specification/issues/97
+                            onClose={() => {}}
+                            isInline={true}
+                          />
                         ) : (
                           <div className="flex flex-col gap-2">
                             <pre className="text-sm text-muted-foreground overflow-x-auto whitespace-pre-wrap break-words max-w-full max-h-[10em] overflow-y-hidden">
@@ -216,7 +223,7 @@ const PurePreviewMessage = ({
                       })}
                     >
                       {toolName === 'getWeather' ? (
-                        <Weather />
+                        <Weather toolResultId={toolCallId} />
                       ) : toolName === 'createDocument' ? (
                         <DocumentPreview isReadonly={isReadonly} args={args} />
                       ) : toolName === 'updateDocument' ? (
