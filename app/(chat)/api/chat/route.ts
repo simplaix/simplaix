@@ -25,8 +25,9 @@ import { createDocument } from '@/lib/ai/tools/create-document';
 import { updateDocument } from '@/lib/ai/tools/update-document';
 import { requestSuggestions } from '@/lib/ai/tools/request-suggestions';
 import { getWeather } from '@/lib/ai/tools/get-weather';
-import { loadTools } from '@/toolbox';
+import { ToolManager } from '@/toolbox';
 export const maxDuration = 60;
+
 
 export async function POST(request: Request) {
   const {
@@ -62,9 +63,11 @@ export async function POST(request: Request) {
   return createDataStreamResponse({
     execute: async (dataStream) => {
       // Load mcp tools
-      const toolset = await loadTools(dataStream);
+      const toolManager = new ToolManager();
+      await toolManager.loadTools(dataStream);
 
-      console.log('toolset', toolset.tools);
+      const tools = toolManager.getTools();
+      console.log('tools', Object.keys(tools));
       
       const result = streamText({
         model: myProvider.languageModel(selectedChatModel),
@@ -82,7 +85,7 @@ export async function POST(request: Request) {
             session,
             dataStream,
           }),
-          ...toolset.tools,
+          ...tools,
         },
         onFinish: async ({ response, reasoning }) => {
           if (session.user?.id) {

@@ -6,7 +6,7 @@ import { generateUUID } from '@/lib/utils';
 
 
 function parseResult(result: any) {
-  const parsedArray = result.content;
+  const parsedArray = result.content; // TODO: Currently mcp call only returns array of objects, according to this issue: https://github.com/modelcontextprotocol/specification/issues/97
   const resultArray = parsedArray.map((item: any) => {
     return JSON.parse(item.text);
   });
@@ -22,14 +22,14 @@ export function mapToolToToolset(
 ): ToolDefinition {
   let toolName = tool.name;
   if (toolName !== serverName) {
-    toolName = `simplaix_${toolName}`;
+    toolName = `server_tool_${toolName}`;
   }
 
   return {
     description: tool.description || '',
     parameters: jsonSchema(tool.inputSchema) as any,
     execute: async (args: any) => {
-      console.log('calling tool', toolName, args);
+      console.log('calling server side tool', toolName, args);
       try {
         const resultPromise = (async () => {
           const toolResultId = generateUUID();

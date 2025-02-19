@@ -1,19 +1,17 @@
 // components/email-ui/email-list.tsx
-import { X } from 'lucide-react';
-import { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
-import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
-import { cn } from '@/lib/utils';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { EmailResult } from '@/toolbox/tools/local/email/types/email';
-import { useEmailStore } from '@/components/stores/emailStore';
+import { useEmailStore } from '@/toolbox/stores/emailStore';
 import { UIContainer } from '@/components/base/ui-container';
 
 import { EmailCard } from './email-card';
 import { MailDisplay } from './email-display';
 import { cx } from 'class-variance-authority';
-import { useUiVisiableStore } from '@/components/stores/uiVisiableStore';
+import { useUiVisiableStore } from '@/toolbox/stores/uiVisiableStore';
 
+const UITitle = 'Email Search Results';
 interface EmailListProps {
   emails: EmailResult[];
   toolResultId: string;
@@ -77,7 +75,7 @@ export function EmailList({
   }
 
   return (
-    <UIContainer onClose={onClose} title="Email Search Results">
+    <UIContainer onClose={onClose} title={UITitle}>
       <div className="flex flex-row">
         <div className= {selectedEmail ? "w-1/2 flex flex-row" : "w-full"}>
           <ScrollArea className="h-[500px]">

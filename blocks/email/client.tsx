@@ -1,5 +1,5 @@
 import { Block } from '@/components/base/create-block';
-import { EmailList } from '@/components/email-ui/email-list';
+import { EmailList } from '@/toolbox/tools/local/email/ui/email-ui/email-list';
 import { EmailResult } from './types/email';
 
 interface EmailBlockMetadata {

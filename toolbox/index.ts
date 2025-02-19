@@ -5,42 +5,53 @@ import { validateMCPServers, loadToolConfig } from "./mcp/servers";
 import { mapToolToToolset } from "./mcp/toolMapper";
 import { ToolSet, ToolSetConfig } from "./mcp/types";
 
-export async function loadTools(
-  streamingData: DataStreamWriter,
-  onCallTool?: ToolSetConfig['onCallTool'],
-): Promise<ToolSet> {
-  const mcpServers = await loadToolConfig();
+export class ToolManager {
+  private toolset: ToolSet;
+  private config!: ToolSetConfig;
 
-  const config: ToolSetConfig = {
-    mcpServers,
-    onCallTool
-  };
-
-  validateMCPServers(config.mcpServers);
-
-  const toolset: ToolSet = {
-    tools: {},
-    clients: {},
-  };
-
-  for (const [serverName, serverConfig] of Object.entries(config.mcpServers)) {
-    const client = await createMCPClient(serverConfig);
-    toolset.clients[serverName] = client;
-
-    const toolList = await client.listTools();
-
-    for (const tool of toolList.tools) {
-      const toolName = tool.name !== serverName ? tool.name : tool.name;
-      toolset.tools[toolName] = mapToolToToolset(
-        tool,
-        serverName,
-        client,
-        config,
-        streamingData
-      );
-    }
+  constructor() {
+    this.toolset = { tools: {}, clients: {} };
   }
-  return toolset;
+
+  getToolNames() {
+    return Object.keys(this.toolset.tools);
+  }
+
+  getTools() {
+    return this.toolset.tools;
+  }
+
+  async loadTools(
+    streamingData: DataStreamWriter,
+    onCallTool?: ToolSetConfig['onCallTool'],
+  ): Promise<ToolSet> {
+    const mcpServers = await loadToolConfig();
+    this.config = { mcpServers, onCallTool };
+
+    validateMCPServers(this.config.mcpServers);
+
+    // Reset state for fresh load
+    this.toolset = { tools: {}, clients: {} };
+
+    for (const [serverName, serverConfig] of Object.entries(this.config.mcpServers)) {
+      const client = await createMCPClient(serverConfig);
+      this.toolset.clients[serverName] = client;
+
+      const toolList = await client.listTools();
+
+      for (const tool of toolList.tools) {
+        const toolName = tool.name !== serverName ? tool.name : tool.name;
+        this.toolset.tools[toolName] = mapToolToToolset(
+          tool,
+          serverName,
+          client,
+          this.config,
+          streamingData
+        );
+      }
+    }
+    return this.toolset;
+  }
 }
 
 export * from './mcp/types';

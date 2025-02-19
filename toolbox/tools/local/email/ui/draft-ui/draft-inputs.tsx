@@ -12,24 +12,62 @@ import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
 import { DraftData } from '@/toolbox/tools/local/email/types/draft';
-import { sendEmail } from '@/utils/gmail';
+import { useUiVisiableStore } from '@/toolbox/stores/uiVisiableStore';
+import { UIContainer } from '@/components/base/ui-container';
+
+const UITitle = 'New Email Draft';
+
+export function InlineDraftInput({
+  draftData,
+  toolResultId,
+}: {
+  draftData: DraftData;
+  toolResultId: string;
+}) {
+  const showDraftUI = useUiVisiableStore((state) => state.visiableUIs.has(toolResultId));
+  const addVisiableUI = useUiVisiableStore((state) => state.addVisiableUI);
+
+  return (
+    <Button
+      onClick={() => addVisiableUI(toolResultId)}
+      className={cn(
+        'flex flex-row gap-4 rounded-2xl p-4 bg-gray-800 hover:bg-gray-100 max-w-[300px] h-auto border border-gray-200 text-black'
+      )}
+    >
+      <div className="flex flex-col">
+        <div className="text-sm font-medium">
+          New draft created
+        </div>
+        <div className="text-xs text-gray-500">
+          {showDraftUI ? 'Editing...' : 'Click to open draft'}
+        </div>
+      </div>
+    </Button>
+  );
+}
 
 export function DraftInputs({
-  className,
   draftData,
   onClose,
+  isInline = false,
+  toolResultId,
 }: {
   className?: string;
   draftData: DraftData;
   onClose: () => void;
+  isInline?: boolean;
+  toolResultId: string;
 }) {
+
   const [draft, setDraft] = useState(draftData);
   const [isSending, setIsSending] = useState(false);
+  const [showCc, setShowCc] = useState(!!draft.recipients.cc?.length);
+  const [showBcc, setShowBcc] = useState(!!draft.recipients.bcc?.length);
 
   const handleSendEmail = async () => {
     try {
       setIsSending(true);
-      await sendEmail(draft);
+      // TODO: send email here
 
       toast.success('Email sent successfully');
       onClose();
@@ -43,34 +81,23 @@ export function DraftInputs({
     }
   };
 
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: 10 }}
-      className={cn(
-        'relative bg-white rounded-lg shadow-lg p-6 max-w-2xl w-full mx-auto h-[600px] flex flex-col',
-        className
-      )}
-    >
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-semibold text-gray-900">New Email Draft</h2>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="hover:bg-gray-100 rounded-full size-8"
-          onClick={onClose}
-        >
-          <X className="size-4" />
-        </Button>
-      </div>
+  if (isInline) {
+    return (
+      <InlineDraftInput
+        draftData={draftData}
+        toolResultId={toolResultId}
+      />
+    );
+  }
 
-      <div className="space-y-4 flex-1 overflow-y-auto min-h-0 flex flex-col">
+  return (
+    <UIContainer onClose={onClose} title={UITitle + ' - ' + draft.subject} className="max-w-[800px] h-screen flex flex-col">
+      <div className="space-y-4 flex-1 overflow-y-auto flex flex-col p-4 pt-1">
         <div className="space-y-2 shrink-0">
-          <Label htmlFor="to" className="text-sm font-medium text-gray-700">
-            To
-          </Label>
-          <div className="flex gap-2">
+          <div className="flex items-center gap-2">
+            <Label htmlFor="to" className="text-sm font-medium text-gray-700 shrink-0">
+              To:
+            </Label>
             <div className="relative flex-1">
               <Input
                 id="to"
@@ -80,9 +107,7 @@ export function DraftInputs({
                     ...draft,
                     recipients: {
                       ...draft.recipients,
-                      to: e.target.value
-                        .split(',')
-                        .map((email) => email.trim()),
+                      to: e.target.value.split(',').map((email) => email.trim()),
                     },
                   })
                 }
@@ -91,13 +116,75 @@ export function DraftInputs({
               />
               <Users className="size-4 absolute top-2 left-2 text-gray-500" />
             </div>
-            <Button variant="outline" size="sm">
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={() => setShowCc(!showCc)}
+              className={showCc ? 'bg-gray-100' : ''}
+            >
               Cc
             </Button>
-            <Button variant="outline" size="sm">
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={() => setShowBcc(!showBcc)}
+              className={showBcc ? 'bg-gray-100' : ''}
+            >
               Bcc
             </Button>
           </div>
+
+          {showCc && (
+            <div className="flex items-center gap-2">
+              <Label htmlFor="cc" className="text-sm font-medium text-gray-700 shrink-0">
+                Cc:
+              </Label>
+              <div className="relative flex-1">
+                <Input
+                  id="cc"
+                  value={draft.recipients.cc?.join(', ') || ''}
+                  onChange={(e) =>
+                    setDraft({
+                      ...draft,
+                      recipients: {
+                        ...draft.recipients,
+                        cc: e.target.value.split(',').map((email) => email.trim()),
+                      },
+                    })
+                  }
+                  placeholder="Add Cc recipients..."
+                  className="pl-8"
+                />
+                <Users className="size-4 absolute top-2 left-2 text-gray-500" />
+              </div>
+            </div>
+          )}
+
+          {showBcc && (
+            <div className="flex items-center gap-2">
+              <Label htmlFor="bcc" className="text-sm font-medium text-gray-700 shrink-0">
+                Bcc:
+              </Label>
+              <div className="relative flex-1">
+                <Input
+                  id="bcc"
+                  value={draft.recipients.bcc?.join(', ') || ''}
+                  onChange={(e) =>
+                    setDraft({
+                      ...draft,
+                      recipients: {
+                        ...draft.recipients,
+                        bcc: e.target.value.split(',').map((email) => email.trim()),
+                      },
+                    })
+                  }
+                  placeholder="Add Bcc recipients..."
+                  className="pl-8"
+                />
+                <Users className="size-4 absolute top-2 left-2 text-gray-500" />
+              </div>
+            </div>
+          )}
         </div>
 
         <div className="space-y-2 shrink-0">
@@ -123,7 +210,7 @@ export function DraftInputs({
 
         <Separator className="my-4 shrink-0" />
 
-        <div className="flex-1 flex flex-col min-h-0">
+        <div className="flex-1">
           <Textarea
             id="content"
             value={draft.content}
@@ -134,7 +221,8 @@ export function DraftInputs({
               })
             }
             placeholder="Write your email..."
-            className="size-full resize-none"
+            className="w-full h-full min-h-[600px] resize-none"
+            style={{ overflow: 'auto', minHeight: '300px' }}
           />
         </div>
 
@@ -158,6 +246,6 @@ export function DraftInputs({
           </div>
         </div>
       </div>
-    </motion.div>
+    </UIContainer>
   );
 }
