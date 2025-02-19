@@ -46,7 +46,9 @@ export function Chat({
     isLoading,
     stop,
     reload,
+    addToolResult
   } = useChat({
+    maxSteps: 10,
     id,
     body: { id, selectedChatModel: selectedChatModel },
     initialMessages,
@@ -59,14 +61,13 @@ export function Chat({
     onError: (error) => {
       toast.error('An error occured, please try again!');
     },
-    // onToolCall({ toolCall}) {
-    //   console.log('toolCall', toolCall);
-    //   if (toolCall.toolName === 'create_draft') {
-    //     console.log('toolCall', toolCall);
-    //     console.log('toolCall.args', toolCall.args);
-    //     return toolCall.args.draft_data;
-    //   }
-    // },
+    onToolCall({ toolCall}) {
+      console.log('toolCall', toolCall);
+      // if (toolCall.toolName === 'create_jira_issues') {
+      //   console.log('toolCall.args', toolCall.args);
+      //   return toolCall.args.requests;
+      // }
+    },
   });
 
   const { data: votes } = useSWR<Array<Vote>>(
@@ -117,6 +118,7 @@ export function Chat({
             >
               <MiddleSection
                messages={messages}
+               addToolResult={addToolResult}
                />
             </motion.div>
           )}

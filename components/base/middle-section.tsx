@@ -1,13 +1,15 @@
 'use client';
 
 import { EmailList } from '@/toolbox/tools/local/email/ui/email-ui/email-list';
-import type { Attachment, Message } from 'ai';
+import type { Attachment, Message, ToolResult } from 'ai';
 import { DocumentPreview } from './document-preview';
 import { Weather } from './weather';
 import { DialogTrigger , DialogContent, DialogTitle , Dialog } from '../ui/dialog';
 import { useEmailStore } from '../../toolbox/stores/emailStore';
 import { useUiVisiableStore } from '../../toolbox/stores/uiVisiableStore';
 import { DraftInputs } from '@/toolbox/tools/local/email/ui/draft-ui/draft-inputs';
+import { JiraTicketInputs } from '@/toolbox/tools/local/jira/ui/jira-ticket-inputs';
+
 const JSONDialog = ({ result }: { result: any }) => {
   return (
     <Dialog>
@@ -26,10 +28,15 @@ const JSONDialog = ({ result }: { result: any }) => {
   );
 };
 
-export function MiddleSection({ messages }: { messages: Message[] }) {
+export function MiddleSection({ messages, addToolResult }: { messages: Message[], addToolResult: ({toolCallId, result}: {toolCallId: string; result: any}) => void }) {
   const setSelectedEmail = useEmailStore((state) => state.setSelectedEmail);
   const visiableUIs = useUiVisiableStore((state) => state.visiableUIs);
   const removeVisiableUI = useUiVisiableStore((state) => state.removeVisiableUI);
+
+  const toolCalls = messages
+    .filter(message => message.role === 'assistant' && message.toolInvocations?.length && message.toolInvocations.length > 0)
+    .flatMap(message => message.toolInvocations?.filter(tool => tool.state === 'call') || []);
+
   const toolResults = messages
     .filter(message => message.role === 'assistant' && message.toolInvocations?.length && message.toolInvocations.length > 0)
     .flatMap(message => message.toolInvocations?.filter(tool => tool.state === 'result') || []);
@@ -41,8 +48,10 @@ export function MiddleSection({ messages }: { messages: Message[] }) {
   };
 
   const visibleResults = toolResults.filter(result => shouldShow(result.toolName, result.result.toolResultId));
-  
-  if (visibleResults.length === 0) {
+  const visibleCalls = toolCalls.filter(call => shouldShow(call.toolName, call.toolCallId));
+
+  console.log('visibleCalls', visibleCalls);
+  if (visibleResults.length === 0 && visibleCalls.length === 0) {
     return (
       <div className="flex flex-col h-full flex-1">
         <div className="flex-1 bg-white overflow-y-auto">
@@ -96,6 +105,20 @@ export function MiddleSection({ messages }: { messages: Message[] }) {
               )}
             </div>
           ))}
+
+          {visibleCalls.map((toolCall, index) => (
+            <div key={`${toolCall.toolName}-${index}`}>
+              {toolCall.toolName === 'create_jira_issues' ? (
+                <JiraTicketInputs
+                  toolCallId={toolCall.toolCallId}
+                  tickets={toolCall.args.requests}
+                  onClose={() => removeVisiableUI(toolCall.toolCallId)}
+                  addToolResult={addToolResult}
+                />
+              ) : null}
+            </div>
+          ))}
+          
         </div>
       </div>
     </div>

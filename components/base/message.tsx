@@ -27,7 +27,8 @@ import { MessageReasoning } from './message-reasoning';
 import { DialogTrigger , Dialog, DialogContent, DialogTitle } from '../ui/dialog';
 import { EmailList } from '@/toolbox/tools/local/email/ui/email-ui/email-list';
 import { DraftInputs } from '@/toolbox/tools/local/email/ui/draft-ui/draft-inputs';
-
+import { JiraTicketInputs } from '@/toolbox/tools/local/jira/ui/jira-ticket-inputs';
+import { v4 as uuidv4 } from 'uuid';
 const JSONDialog = ({ result }: { result: any }) => {
   return (
     <Dialog>
@@ -161,7 +162,22 @@ const PurePreviewMessage = ({
               <div className="flex flex-col gap-4">
                 {message.toolInvocations.map((toolInvocation) => {
                   const { toolName, toolCallId, state, args } = toolInvocation;
-
+                  console.log('toolInvocation', toolInvocation);
+                  if (state === "call") {
+                    if (toolName === 'create_jira_issues') {
+                      return (
+                        <JiraTicketInputs
+                          key={toolCallId}
+                          toolCallId={toolCallId}
+                          tickets={args.requests}
+                          onClose={() => {}}
+                          isInline={true}
+                          addToolResult={() => {}}
+                        />
+                      );
+                    }
+                  }
+                  // Handle tool result UI
                   if (state === 'result') {
                     const { result } = toolInvocation;
                     return (
@@ -215,6 +231,7 @@ const PurePreviewMessage = ({
                       </div>
                     );
                   }
+
                   return (
                     <div
                       key={toolCallId}

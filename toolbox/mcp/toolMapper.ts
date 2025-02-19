@@ -21,15 +21,23 @@ export function mapToolToToolset(
   streamingData: DataStreamWriter
 ): ToolDefinition {
   let toolName = tool.name;
+
   if (toolName !== serverName) {
     toolName = `server_tool_${toolName}`;
+  }
+
+  if (toolName === 'server_tool_create_jira_issues') {
+    return {
+      description: tool.description || '',
+      parameters: jsonSchema(tool.inputSchema) as any,
+    };
   }
 
   return {
     description: tool.description || '',
     parameters: jsonSchema(tool.inputSchema) as any,
     execute: async (args: any) => {
-      console.log('calling server side tool', toolName, args);
+      // console.log('calling server side tool', toolName, args);
       try {
         const resultPromise = (async () => {
           const toolResultId = generateUUID();
