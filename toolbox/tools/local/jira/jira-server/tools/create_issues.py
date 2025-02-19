@@ -1,5 +1,4 @@
 from models.ticket import JiraTicketData, JiraRequest
-import uuid
 
 
 def create_jira_issues(
@@ -7,6 +6,7 @@ def create_jira_issues(
 ) -> list[JiraTicketData]:
     """
     Create Jira issues (task, bug, story) with the given parameters.
+    This is a definition of the client side tool.
 
     Args:
         requests: List of Jira requests
