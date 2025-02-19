@@ -11,6 +11,7 @@ import { MailDisplay } from './email-display';
 import { cx } from 'class-variance-authority';
 import { useUiVisiableStore } from '@/toolbox/stores/uiVisiableStore';
 
+const UITitle = 'Email Search Results';
 interface EmailListProps {
   emails: EmailResult[];
   toolResultId: string;
@@ -74,7 +75,7 @@ export function EmailList({
   }
 
   return (
-    <UIContainer onClose={onClose} title="Email Search Results">
+    <UIContainer onClose={onClose} title={UITitle}>
       <div className="flex flex-row">
         <div className= {selectedEmail ? "w-1/2 flex flex-row" : "w-full"}>
           <ScrollArea className="h-[500px]">

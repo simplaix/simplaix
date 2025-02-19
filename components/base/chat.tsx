@@ -60,6 +60,14 @@ export function Chat({
     onError: (error) => {
       toast.error('An error occured, please try again!');
     },
+    // onToolCall({ toolCall}) {
+    //   console.log('toolCall', toolCall);
+    //   if (toolCall.toolName === 'create_draft') {
+    //     console.log('toolCall', toolCall);
+    //     console.log('toolCall.args', toolCall.args);
+    //     return toolCall.args.draft_data;
+    //   }
+    // },
   });
 
   const { data: votes } = useSWR<Array<Vote>>(

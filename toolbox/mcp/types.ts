@@ -39,5 +39,5 @@ export type ToolSet = {
 export interface ToolDefinition {
   description: string;
   parameters: Schema<any>;
-  execute: (params: any) => Promise<any>;
+  execute?: (params: any) => Promise<any>;
 }

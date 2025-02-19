@@ -28,6 +28,7 @@ import { getWeather } from '@/lib/ai/tools/get-weather';
 import { ToolManager } from '@/toolbox';
 export const maxDuration = 60;
 
+
 export async function POST(request: Request) {
   const {
     id,
@@ -66,7 +67,7 @@ export async function POST(request: Request) {
       await toolManager.loadTools(dataStream);
 
       const tools = toolManager.getTools();
-      console.log('tools', tools);
+      console.log('tools', Object.keys(tools));
       
       const result = streamText({
         model: myProvider.languageModel(selectedChatModel),

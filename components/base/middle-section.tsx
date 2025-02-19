@@ -8,6 +8,7 @@ import { DialogTrigger , DialogContent, DialogTitle , Dialog } from '../ui/dialo
 import { useWeatherStore } from '../../toolbox/stores/weatherStore';
 import { useEmailStore } from '../../toolbox/stores/emailStore';
 import { useUiVisiableStore } from '../../toolbox/stores/uiVisiableStore';
+import { DraftInputs } from '@/toolbox/tools/local/email/ui/draft-ui/draft-inputs';
 const JSONDialog = ({ result }: { result: any }) => {
   return (
     <Dialog>
@@ -61,13 +62,13 @@ export function MiddleSection({ messages }: { messages: Message[] }) {
   return (
     <div className="flex flex-col h-full flex-1">
       <div className="flex-1 bg-white overflow-y-auto">
-        <div className="p-4 grid gap-4">
+        <div className="p-4 grid gap-4 justify-items-center">
           {visibleResults.map((toolResult, index) => (
             <div key={`${toolResult.toolName}-${index}`}>
               {toolResult.toolName === 'getWeather' ? (
                 <Weather 
                   weatherAtLocation={toolResult.result} 
-                  onClose={() => setShowWeatherUI(false)}
+                  onClose={() => removeVisiableUI(toolResult.result.toolResultId)}
                 />
               ) : toolResult.toolName === 'createDocument' ? (
                 <DocumentPreview
@@ -79,10 +80,15 @@ export function MiddleSection({ messages }: { messages: Message[] }) {
                   toolResultId={toolResult.result.toolResultId}
                   emails={toolResult.result.data}
                   onClose={() => {
-                    setShowEmailUI(false);
                     removeVisiableUI(toolResult.result.toolResultId);
                   }}
                   onSelect={(email) => setSelectedEmail(email)}
+                />
+              ) : toolResult.toolName === 'create_draft' ? (
+                <DraftInputs
+                  toolResultId={toolResult.result.toolResultId}
+                  draftData={toolResult.result.data[0]}
+                  onClose={() => removeVisiableUI(toolResult.result.toolResultId)}
                 />
               ) : (
                 <div className="flex flex-col gap-2">

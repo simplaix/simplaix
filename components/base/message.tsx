@@ -26,6 +26,7 @@ import { DocumentPreview } from './document-preview';
 import { MessageReasoning } from './message-reasoning';
 import { DialogTrigger , Dialog, DialogContent, DialogTitle } from '../ui/dialog';
 import { EmailList } from '@/toolbox/tools/local/email/ui/email-ui/email-list';
+import { DraftInputs } from '@/toolbox/tools/local/email/ui/draft-ui/draft-inputs';
 
 const JSONDialog = ({ result }: { result: any }) => {
   return (
@@ -196,6 +197,13 @@ const PurePreviewMessage = ({
                             isInline={true}
                             onClose={() => {}}
                             onSelect={(email) => {}}
+                          />
+                        ) : toolName === 'create_draft' ? (
+                          <DraftInputs
+                            toolResultId={result.toolResultId}
+                            draftData={result.data[0]} // TODO: Get only first object from array, as currently mcp call only returns array of objects, according to this issue: https://github.com/modelcontextprotocol/specification/issues/97
+                            onClose={() => {}}
+                            isInline={true}
                           />
                         ) : (
                           <div className="flex flex-col gap-2">

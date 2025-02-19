@@ -12,24 +12,60 @@ import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
 import { DraftData } from '@/toolbox/tools/local/email/types/draft';
-import { sendEmail } from '@/utils/gmail';
+import { useUiVisiableStore } from '@/toolbox/stores/uiVisiableStore';
+import { UIContainer } from '@/components/base/ui-container';
+
+const UITitle = 'New Email Draft';
+
+export function InlineDraftInput({
+  draftData,
+  toolResultId,
+}: {
+  draftData: DraftData;
+  toolResultId: string;
+}) {
+  const showDraftUI = useUiVisiableStore((state) => state.visiableUIs.has(toolResultId));
+  const addVisiableUI = useUiVisiableStore((state) => state.addVisiableUI);
+
+  return (
+    <Button
+      onClick={() => addVisiableUI(toolResultId)}
+      className={cn(
+        'flex flex-row gap-4 rounded-2xl p-4 bg-gray-800 hover:bg-gray-100 max-w-[300px] h-auto border border-gray-200'
+      )}
+    >
+      <div className="flex flex-col">
+        <div className="text-sm font-medium text-gray-900">
+          New draft to {draftData.recipients.to.join(', ')}
+        </div>
+        <div className="text-xs text-gray-500">
+          {showDraftUI ? 'Editing...' : 'Click to open draft'}
+        </div>
+      </div>
+    </Button>
+  );
+}
 
 export function DraftInputs({
-  className,
   draftData,
   onClose,
+  isInline = false,
+  toolResultId,
 }: {
   className?: string;
   draftData: DraftData;
   onClose: () => void;
+  isInline?: boolean;
+  toolResultId: string;
 }) {
+
   const [draft, setDraft] = useState(draftData);
   const [isSending, setIsSending] = useState(false);
 
   const handleSendEmail = async () => {
     try {
       setIsSending(true);
-      await sendEmail(draft);
+      // TODO: send email here
 
       toast.success('Email sent successfully');
       onClose();
@@ -43,29 +79,18 @@ export function DraftInputs({
     }
   };
 
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: 10 }}
-      className={cn(
-        'relative bg-white rounded-lg shadow-lg p-6 max-w-2xl w-full mx-auto h-[600px] flex flex-col',
-        className
-      )}
-    >
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-semibold text-gray-900">New Email Draft</h2>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="hover:bg-gray-100 rounded-full size-8"
-          onClick={onClose}
-        >
-          <X className="size-4" />
-        </Button>
-      </div>
+  if (isInline) {
+    return (
+      <InlineDraftInput
+        draftData={draftData}
+        toolResultId={toolResultId}
+      />
+    );
+  }
 
-      <div className="space-y-4 flex-1 overflow-y-auto min-h-0 flex flex-col">
+  return (
+    <UIContainer onClose={onClose} title={UITitle + ' - ' + draft.subject} className="max-w-[800px] h-screen flex flex-col">
+      <div className="space-y-4 flex-1 overflow-y-auto flex flex-col p-4">
         <div className="space-y-2 shrink-0">
           <Label htmlFor="to" className="text-sm font-medium text-gray-700">
             To
@@ -123,7 +148,7 @@ export function DraftInputs({
 
         <Separator className="my-4 shrink-0" />
 
-        <div className="flex-1 flex flex-col min-h-0">
+        <div className="flex-1">
           <Textarea
             id="content"
             value={draft.content}
@@ -134,7 +159,8 @@ export function DraftInputs({
               })
             }
             placeholder="Write your email..."
-            className="size-full resize-none"
+            className="w-full h-full min-h-[600px] resize-none"
+            style={{ overflow: 'auto', minHeight: '300px' }}
           />
         </div>
 
@@ -158,6 +184,6 @@ export function DraftInputs({
           </div>
         </div>
       </div>
-    </motion.div>
+    </UIContainer>
   );
 }
