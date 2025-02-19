@@ -85,7 +85,7 @@ export function JiraTicketInputs({
       <ScrollArea className="h-[600px] p-6">
         <div className="space-y-4">
           {tickets.map((ticket, index) => (
-            <TicketCard key={index} ticket={ticket} index={index + 1}/>
+            <TicketCard key={uuidv4()} ticket={ticket} index={index + 1}/>
           ))}
         </div>
       </ScrollArea>
