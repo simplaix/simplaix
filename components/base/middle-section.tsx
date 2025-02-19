@@ -88,10 +88,10 @@ export function MiddleSection({ messages }: { messages: Message[] }) {
                 />
               ) : (
                 <div className="flex flex-col gap-2">
-                  <pre className="text-sm text-muted-foreground overflow-x-auto whitespace-pre-wrap break-words max-w-full">
+                  {/* <pre className="text-sm text-muted-foreground overflow-x-auto whitespace-pre-wrap break-words max-w-full">
                     {JSON.stringify(toolResult.result, null, 2)}
-                  </pre>
-                  <JSONDialog result={toolResult.result} />
+                  </pre> */}
+                  {/* <JSONDialog result={toolResult.result} /> */}
                 </div>
               )}
             </div>
