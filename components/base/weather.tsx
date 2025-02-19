@@ -4,9 +4,8 @@ import cx from 'classnames';
 import { format, isWithinInterval } from 'date-fns';
 import { useEffect, useState } from 'react';
 import { Button } from '../ui/button';
-import { useWeatherStore } from '../../toolbox/stores/weatherStore';
 import { UIContainer } from './ui-container';
-
+import { useUiVisiableStore } from '../../toolbox/stores/uiVisiableStore';
 const COMPONENT_NAME = 'Weather';
 
 interface WeatherAtLocation {
@@ -251,15 +250,18 @@ export function InlineWeather({
 }
 
 export function Weather({
+  toolResultId,
   weatherAtLocation = SAMPLE,
   isInline = false,
   onClose,
 }: {
+  toolResultId: string;
   weatherAtLocation?: WeatherAtLocation;
   isInline?: boolean;
   onClose?: () => void;
 }) {
   const [isMobile, setIsMobile] = useState(false);
+  const addVisiableUI = useUiVisiableStore((state) => state.addVisiableUI);
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768);
@@ -270,13 +272,12 @@ export function Weather({
 
     return () => window.removeEventListener('resize', handleResize);
   }, []);
-  
-  const setShowWeatherUI = useWeatherStore((state) => state.setShowWeatherUI);
+
   if (isInline) {
     return (
       <InlineWeather
         weatherAtLocation={weatherAtLocation}
-        onClick={() => setShowWeatherUI(true)}
+        onClick={() => addVisiableUI(toolResultId)}
       />
     );
   }

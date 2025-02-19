@@ -164,12 +164,11 @@ const PurePreviewMessage = ({
 
                   if (state === 'result') {
                     const { result } = toolInvocation;
-
-                    console.log('result', result);
                     return (
                       <div key={toolCallId}>
                         {toolName === 'getWeather' ? (
                           <Weather 
+                            toolResultId={result.toolResultId}
                             weatherAtLocation={result} 
                             isInline={true}
                           />
@@ -224,7 +223,7 @@ const PurePreviewMessage = ({
                       })}
                     >
                       {toolName === 'getWeather' ? (
-                        <Weather />
+                        <Weather toolResultId={toolCallId} />
                       ) : toolName === 'createDocument' ? (
                         <DocumentPreview isReadonly={isReadonly} args={args} />
                       ) : toolName === 'updateDocument' ? (

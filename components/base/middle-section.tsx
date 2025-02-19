@@ -5,7 +5,6 @@ import type { Attachment, Message } from 'ai';
 import { DocumentPreview } from './document-preview';
 import { Weather } from './weather';
 import { DialogTrigger , DialogContent, DialogTitle , Dialog } from '../ui/dialog';
-import { useWeatherStore } from '../../toolbox/stores/weatherStore';
 import { useEmailStore } from '../../toolbox/stores/emailStore';
 import { useUiVisiableStore } from '../../toolbox/stores/uiVisiableStore';
 import { DraftInputs } from '@/toolbox/tools/local/email/ui/draft-ui/draft-inputs';
@@ -28,10 +27,6 @@ const JSONDialog = ({ result }: { result: any }) => {
 };
 
 export function MiddleSection({ messages }: { messages: Message[] }) {
-  const showWeatherUI = useWeatherStore((state) => state.showWeatherUI);
-  const setShowWeatherUI = useWeatherStore((state) => state.setShowWeatherUI);
-  const showEmailUI = useEmailStore((state) => state.showEmailUI);
-  const setShowEmailUI = useEmailStore((state) => state.setShowEmailUI);
   const setSelectedEmail = useEmailStore((state) => state.setSelectedEmail);
   const visiableUIs = useUiVisiableStore((state) => state.visiableUIs);
   const removeVisiableUI = useUiVisiableStore((state) => state.removeVisiableUI);
@@ -40,7 +35,7 @@ export function MiddleSection({ messages }: { messages: Message[] }) {
     .flatMap(message => message.toolInvocations?.filter(tool => tool.state === 'result') || []);
 
   const shouldShow = (toolName: string, toolResultId: string) => {
-    console.log('toolName', toolName, 'toolResultId', toolResultId, 'visiableUIs', visiableUIs);
+    console.log('Log from file: middle-section.tsx: toolName', toolName, 'toolResultId', toolResultId, 'visiableUIs', visiableUIs);
     if (visiableUIs.has(toolResultId)) return true;
     return false;
   };
@@ -68,6 +63,7 @@ export function MiddleSection({ messages }: { messages: Message[] }) {
               {toolResult.toolName === 'getWeather' ? (
                 <Weather 
                   weatherAtLocation={toolResult.result} 
+                  toolResultId={toolResult.result.toolResultId}
                   onClose={() => removeVisiableUI(toolResult.result.toolResultId)}
                 />
               ) : toolResult.toolName === 'createDocument' ? (

@@ -10,7 +10,7 @@ import { useWindowSize } from 'usehooks-ts';
 import { ChatHeader } from '@/components/base/chat-header';
 import type { Vote } from '@/lib/db/schema';
 import { fetcher, generateUUID } from '@/lib/utils';
-import { create } from 'zustand'
+import { useUiVisiableStore } from '@/toolbox/stores/uiVisiableStore';
 import { Block } from './block';
 import { MultimodalInput } from './multimodal-input';
 import { Messages } from './messages';
@@ -18,7 +18,6 @@ import { VisibilityType } from './visibility-selector';
 import { useBlockSelector } from '@/hooks/use-block';
 import { toast } from 'sonner';
 import { MiddleSection } from './middle-section';
-import { useWeatherStore } from '../../toolbox/stores/weatherStore';
 
 export function Chat({
   id,
@@ -36,7 +35,7 @@ export function Chat({
   const { mutate } = useSWRConfig();
   const { width: windowWidth } = useWindowSize();
   const [showMiddleSection, setShowMiddleSection] = useState(false);
-
+  const addVisiableUI = useUiVisiableStore((state) => state.addVisiableUI);
   const {
     messages,
     setMessages,
@@ -78,7 +77,6 @@ export function Chat({
   const [attachments, setAttachments] = useState<Array<Attachment>>([]);
   const isBlockVisible = useBlockSelector((state) => state.isVisible);
 
-  const showWeatherUI = useWeatherStore((state) => state.showWeatherUI);
   // Check if any message has tool invocations
   useEffect(() => {
     const hasToolInvocations = messages.some(
@@ -87,6 +85,14 @@ export function Chat({
       message.toolInvocations.length > 0
     );
     setShowMiddleSection(hasToolInvocations);
+
+    messages.forEach(message => {
+      message.toolInvocations?.forEach(toolInvocation => {
+        if (toolInvocation.state === 'result') {
+          addVisiableUI(toolInvocation.result.toolResultId);
+        }
+      });
+    });
   }, [messages]);
 
   return (
