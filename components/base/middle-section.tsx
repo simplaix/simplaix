@@ -1,9 +1,8 @@
 'use client';
 
 import { EmailList } from '@/toolbox/tools/local/email/ui/email-ui/email-list';
-import type { Attachment, Message, ToolResult } from 'ai';
+import type {Message } from 'ai';
 import { DocumentPreview } from './document-preview';
-import { Weather } from './weather';
 import { DialogTrigger , DialogContent, DialogTitle , Dialog } from '../ui/dialog';
 import { useEmailStore } from '../../toolbox/stores/emailStore';
 import { useUiVisiableStore } from '../../toolbox/stores/uiVisiableStore';
