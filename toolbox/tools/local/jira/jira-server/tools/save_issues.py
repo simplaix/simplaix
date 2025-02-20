@@ -12,7 +12,8 @@ def save_jira_issues(
     requests: list[JiraRequest],
 ) -> list[JiraTicketData]:
     """
-    Save Jira issues (task, bug, story) with the given parameters. 
+    Save Jira issues (task, bug, story) with the given parameters.
+    Always create the issues on UI first before using this tool.
 
     Args:
         requests: List of Jira requests
@@ -24,6 +25,7 @@ def save_jira_issues(
     auth_token = os.getenv("JIRA_API_TOKEN")
     username = os.getenv("JIRA_USERNAME")
     # Initialize Jira client with token authentication
+    print("username", username)
     jira = JIRA(server=server,
                 basic_auth=(username, auth_token))
 

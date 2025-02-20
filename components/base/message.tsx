@@ -163,8 +163,8 @@ const PurePreviewMessage = ({
                 {message.toolInvocations.map((toolInvocation) => {
                   const { toolName, toolCallId, state, args } = toolInvocation;
                   console.log('toolInvocation', toolInvocation);
-                  if (state === "call") {
-                    if (toolName === 'create_jira_issues') {
+                  if (toolName === 'create_jira_issues') {
+                    if (state === "call") {
                       return (
                         <JiraTicketInputs
                           key={toolCallId}
@@ -174,6 +174,15 @@ const PurePreviewMessage = ({
                           isInline={true}
                           addToolResult={() => {}}
                         />
+                      );
+                    }
+                    else if (state === "result") {
+                      console.log('result', toolInvocation);
+                      return (
+                        <div key={toolCallId}>
+                          Jira tickets confirmed:{' '}
+                          {toolInvocation.result}
+                        </div>
                       );
                     }
                   }

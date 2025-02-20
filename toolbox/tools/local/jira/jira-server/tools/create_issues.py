@@ -5,8 +5,7 @@ def create_jira_issues(
     requests: list[JiraRequest],
 ) -> list[JiraTicketData]:
     """
-    Create Jira issues (task, bug, story) with the given parameters.
-    This is a definition of the client side tool.
+    Create Jira issues on UI (task, bug, story) with the given parameters.
 
     Args:
         requests: List of Jira requests

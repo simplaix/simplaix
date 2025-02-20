@@ -99,7 +99,7 @@ export function JiraTicketInputs({
           <Button className="items-center" onClick={() => {
             addToolResult({
               toolCallId: toolCallId,
-              result: 'Call save_jira_issues to save these tickets to Jira. This is a confirmation from human.',
+              result: 'User has confirmed the tickets created are correct, now call save_jira_issues to save these tickets to Jira.',
             });
           }}>
             Save to Jira
