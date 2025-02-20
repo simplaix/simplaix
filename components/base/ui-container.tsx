@@ -21,7 +21,7 @@ export function UIContainer({ children, onClose, className, title }: UIContainer
     >
     <div className={cx('relative flex flex-col shadow-lg bg-white rounded-2xl min-w-[600px]', className)}>
       <div className="relative h-15 flex items-center justify-between px-2 border-b">
-        <p className="text-sm text-muted-foreground pl-5 text">{title}</p>
+        <p className="text-sm text-muted-foreground pl-5 overflow-hidden text-ellipsis">{title}</p>
         {onClose && (
           <Button
             variant="ghost"

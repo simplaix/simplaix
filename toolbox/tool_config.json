@@ -2,5 +2,9 @@
     "email": {
       "language": "python",
       "type": "local"
+    },
+    "jira": {
+      "language": "python",
+      "type": "local"
     }
   }

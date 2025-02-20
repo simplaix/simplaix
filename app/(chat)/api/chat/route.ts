@@ -56,9 +56,13 @@ export async function POST(request: Request) {
     await saveChat({ id, userId: session.user.id, title });
   }
 
-  await saveMessages({
-    messages: [{ ...userMessage, createdAt: new Date(), chatId: id }],
-  });
+  try {
+    await saveMessages({
+      messages: [{ ...userMessage, createdAt: new Date(), chatId: id }],
+    });
+  } catch (error) {
+    console.error('Failed to save messages', error);
+  }
 
   return createDataStreamResponse({
     execute: async (dataStream) => {
@@ -73,7 +77,8 @@ export async function POST(request: Request) {
         model: myProvider.languageModel(selectedChatModel),
         system: systemPrompt({ selectedChatModel }),
         messages,
-        maxSteps: 5,
+        maxSteps: 10,
+        temperature: 0,
         // experimental_activeTools: Allow all tools
         experimental_transform: smoothStream({ chunking: 'word' }),
         experimental_generateMessageId: generateUUID,
@@ -95,17 +100,20 @@ export async function POST(request: Request) {
                 reasoning,
               });
 
-              await saveMessages({
-                messages: sanitizedResponseMessages.map((message) => {
-                  return {
+              console.log('sanitizedResponseMessages', sanitizedResponseMessages);
+              if (sanitizedResponseMessages.length > 0) {
+                await saveMessages({
+                  messages: sanitizedResponseMessages.map((message) => {
+                    return {
                     id: message.id,
                     chatId: id,
                     role: message.role,
                     content: message.content,
                     createdAt: new Date(),
                   };
-                }),
-              });
+                  }),
+                });
+              }
             } catch (error) {
               console.error('Failed to save chat');
             }

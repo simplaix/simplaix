@@ -46,7 +46,9 @@ export function Chat({
     isLoading,
     stop,
     reload,
+    addToolResult
   } = useChat({
+    maxSteps: 10,
     id,
     body: { id, selectedChatModel: selectedChatModel },
     initialMessages,
@@ -91,6 +93,9 @@ export function Chat({
         if (toolInvocation.state === 'result') {
           addVisiableUI(toolInvocation.result.toolResultId);
         }
+        else if (toolInvocation.state === 'call') {
+          addVisiableUI(toolInvocation.toolCallId);
+        }
       });
     });
   }, [messages]);
@@ -117,6 +122,7 @@ export function Chat({
             >
               <MiddleSection
                messages={messages}
+               addToolResult={addToolResult}
                />
             </motion.div>
           )}

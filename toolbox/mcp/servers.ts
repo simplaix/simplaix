@@ -32,7 +32,7 @@ export async function loadToolConfig(configPath?: string): Promise<MCPServers> {
         let serverConfig: MCPServerConfig;
         if (cfg.language === 'python') {
             // For Python servers using uv, ensure paths are absolute
-            console.log("localServerPath", localServerPath);
+            console.log("localServerPath", localServerPath, name);
             serverConfig = {
                 command: "uv",
                 args: [

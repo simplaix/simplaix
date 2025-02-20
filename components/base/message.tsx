@@ -27,7 +27,8 @@ import { MessageReasoning } from './message-reasoning';
 import { DialogTrigger , Dialog, DialogContent, DialogTitle } from '../ui/dialog';
 import { EmailList } from '@/toolbox/tools/local/email/ui/email-ui/email-list';
 import { DraftInputs } from '@/toolbox/tools/local/email/ui/draft-ui/draft-inputs';
-
+import { JiraTicketInputs } from '@/toolbox/tools/local/jira/ui/jira-ticket-inputs';
+import { v4 as uuidv4 } from 'uuid';
 const JSONDialog = ({ result }: { result: any }) => {
   return (
     <Dialog>
@@ -161,7 +162,35 @@ const PurePreviewMessage = ({
               <div className="flex flex-col gap-4">
                 {message.toolInvocations.map((toolInvocation) => {
                   const { toolName, toolCallId, state, args } = toolInvocation;
-
+                  console.log('toolInvocation', toolInvocation);
+                  if (state === "call") {
+                    if (toolName === 'create_jira_issues') {
+                        return (
+                          <JiraTicketInputs
+                            key={toolCallId}
+                            toolCallId={toolCallId}
+                            tickets={args.requests}
+                            onClose={() => {}}
+                            isInline={true}
+                            addToolResult={() => {}}
+                          />
+                        );
+                    }
+                    else if (toolName === 'create_draft') {
+                      console.log('create_draft', args.draft);
+                      return (
+                        <DraftInputs
+                          key={toolCallId}
+                          toolCallId={toolCallId}
+                          draftData={args.draft}
+                          onClose={() => {}}
+                          isInline={true}
+                          addToolResult={() => {}}
+                        />
+                      );
+                    }
+                  }
+                  // Handle tool result UI
                   if (state === 'result') {
                     const { result } = toolInvocation;
                     return (
@@ -197,13 +226,6 @@ const PurePreviewMessage = ({
                             onClose={() => {}}
                             onSelect={(email) => {}}
                           />
-                        ) : toolName === 'create_draft' ? (
-                          <DraftInputs
-                            toolResultId={result.toolResultId}
-                            draftData={result.data[0]} // TODO: Get only first object from array, as currently mcp call only returns array of objects, according to this issue: https://github.com/modelcontextprotocol/specification/issues/97
-                            onClose={() => {}}
-                            isInline={true}
-                          />
                         ) : (
                           <div className="flex flex-col gap-2">
                             <pre className="text-sm text-muted-foreground overflow-x-auto whitespace-pre-wrap break-words max-w-full max-h-[10em] overflow-y-hidden">
@@ -215,6 +237,7 @@ const PurePreviewMessage = ({
                       </div>
                     );
                   }
+
                   return (
                     <div
                       key={toolCallId}
