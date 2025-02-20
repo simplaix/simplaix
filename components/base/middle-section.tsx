@@ -89,12 +89,6 @@ export function MiddleSection({ messages, addToolResult }: { messages: Message[]
                   }}
                   onSelect={(email) => setSelectedEmail(email)}
                 />
-              ) : toolResult.toolName === 'create_draft' ? (
-                <DraftInputs
-                  toolResultId={toolResult.result.toolResultId}
-                  draftData={toolResult.result.data[0]}
-                  onClose={() => removeVisiableUI(toolResult.result.toolResultId)}
-                />
               ) : (
                 <div className="flex flex-col gap-2">
                   {/* <pre className="text-sm text-muted-foreground overflow-x-auto whitespace-pre-wrap break-words max-w-full">
@@ -112,6 +106,13 @@ export function MiddleSection({ messages, addToolResult }: { messages: Message[]
                 <JiraTicketInputs
                   toolCallId={toolCall.toolCallId}
                   tickets={toolCall.args.requests}
+                  onClose={() => removeVisiableUI(toolCall.toolCallId)}
+                  addToolResult={addToolResult}
+                />
+              ) : toolCall.toolName === 'create_draft' ? (
+                <DraftInputs
+                  toolCallId={toolCall.toolCallId}
+                  draftData={toolCall.args.draft}
                   onClose={() => removeVisiableUI(toolCall.toolCallId)}
                   addToolResult={addToolResult}
                 />

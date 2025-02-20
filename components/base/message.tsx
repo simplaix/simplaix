@@ -163,26 +163,30 @@ const PurePreviewMessage = ({
                 {message.toolInvocations.map((toolInvocation) => {
                   const { toolName, toolCallId, state, args } = toolInvocation;
                   console.log('toolInvocation', toolInvocation);
-                  if (toolName === 'create_jira_issues') {
-                    if (state === "call") {
+                  if (state === "call") {
+                    if (toolName === 'create_jira_issues') {
+                        return (
+                          <JiraTicketInputs
+                            key={toolCallId}
+                            toolCallId={toolCallId}
+                            tickets={args.requests}
+                            onClose={() => {}}
+                            isInline={true}
+                            addToolResult={() => {}}
+                          />
+                        );
+                    }
+                    else if (toolName === 'create_draft') {
+                      console.log('create_draft', args.draft);
                       return (
-                        <JiraTicketInputs
+                        <DraftInputs
                           key={toolCallId}
                           toolCallId={toolCallId}
-                          tickets={args.requests}
+                          draftData={args.draft}
                           onClose={() => {}}
                           isInline={true}
                           addToolResult={() => {}}
                         />
-                      );
-                    }
-                    else if (state === "result") {
-                      console.log('result', toolInvocation);
-                      return (
-                        <div key={toolCallId}>
-                          Jira tickets confirmed:{' '}
-                          {toolInvocation.result}
-                        </div>
                       );
                     }
                   }
@@ -221,13 +225,6 @@ const PurePreviewMessage = ({
                             isInline={true}
                             onClose={() => {}}
                             onSelect={(email) => {}}
-                          />
-                        ) : toolName === 'create_draft' ? (
-                          <DraftInputs
-                            toolResultId={result.toolResultId}
-                            draftData={result.data[0]} // TODO: Get only first object from array, as currently mcp call only returns array of objects, according to this issue: https://github.com/modelcontextprotocol/specification/issues/97
-                            onClose={() => {}}
-                            isInline={true}
                           />
                         ) : (
                           <div className="flex flex-col gap-2">

@@ -14,22 +14,21 @@ import { cn } from '@/lib/utils';
 import { DraftData } from '@/toolbox/tools/local/email/types/draft';
 import { useUiVisiableStore } from '@/toolbox/stores/uiVisiableStore';
 import { UIContainer } from '@/components/base/ui-container';
-
 const UITitle = 'New Email Draft';
 
 export function InlineDraftInput({
   draftData,
-  toolResultId,
+  toolCallId,
 }: {
   draftData: DraftData;
-  toolResultId: string;
+  toolCallId: string;
 }) {
-  const showDraftUI = useUiVisiableStore((state) => state.visiableUIs.has(toolResultId));
+  const showDraftUI = useUiVisiableStore((state) => state.visiableUIs.has(toolCallId));
   const addVisiableUI = useUiVisiableStore((state) => state.addVisiableUI);
 
   return (
     <Button
-      onClick={() => addVisiableUI(toolResultId)}
+      onClick={() => addVisiableUI(toolCallId)}
       className={cn(
         'flex flex-row gap-4 rounded-2xl p-4 bg-gray-800 hover:bg-gray-100 max-w-[300px] h-auto border border-gray-200 text-black'
       )}
@@ -50,13 +49,15 @@ export function DraftInputs({
   draftData,
   onClose,
   isInline = false,
-  toolResultId,
+  toolCallId,
+  addToolResult,
 }: {
   className?: string;
   draftData: DraftData;
   onClose: () => void;
   isInline?: boolean;
-  toolResultId: string;
+  toolCallId: string;
+  addToolResult: ({toolCallId, result}: {toolCallId: string; result: any}) => void;
 }) {
 
   const [draft, setDraft] = useState(draftData);
@@ -67,10 +68,14 @@ export function DraftInputs({
   const handleSendEmail = async () => {
     try {
       setIsSending(true);
+      addToolResult({
+        toolCallId: toolCallId,
+        result: "User has confirmed the draft, now send this email."
+      });
       // TODO: send email here
 
-      toast.success('Email sent successfully');
-      onClose();
+      // toast.success('Email sent successfully');
+      // onClose();
     } catch (error) {
       console.error('Failed to send email:', error);
       toast.error(
@@ -85,7 +90,7 @@ export function DraftInputs({
     return (
       <InlineDraftInput
         draftData={draftData}
-        toolResultId={toolResultId}
+        toolCallId={toolCallId}
       />
     );
   }

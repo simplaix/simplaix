@@ -26,7 +26,7 @@ export function mapToolToToolset(
     toolName = `server_tool_${toolName}`;
   }
 
-  if (toolName === 'server_tool_create_jira_issues') {
+  if (toolName === 'server_tool_create_jira_issues' || toolName === 'server_tool_create_draft') {
     return {
       description: tool.description || '',
       parameters: jsonSchema(tool.inputSchema) as any,

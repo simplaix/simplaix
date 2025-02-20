@@ -5,7 +5,7 @@ import os
 from dotenv import load_dotenv
 from models.ticket import JiraTicketData, JiraRequest
 
-load_dotenv(".env.local")
+load_dotenv()
 
 
 def save_jira_issues(

@@ -92,6 +92,9 @@ export function Chat({
         if (toolInvocation.state === 'result') {
           addVisiableUI(toolInvocation.result.toolResultId);
         }
+        else if (toolInvocation.state === 'call') {
+          addVisiableUI(toolInvocation.toolCallId);
+        }
       });
     });
   }, [messages]);
