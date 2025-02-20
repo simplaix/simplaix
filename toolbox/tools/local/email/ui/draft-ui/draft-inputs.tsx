@@ -60,6 +60,7 @@ export function DraftInputs({
   addToolResult: ({toolCallId, result}: {toolCallId: string; result: any}) => void;
 }) {
 
+
   const [draft, setDraft] = useState(draftData);
   const [isSending, setIsSending] = useState(false);
   const [showCc, setShowCc] = useState(!!draft.recipients.cc?.length);

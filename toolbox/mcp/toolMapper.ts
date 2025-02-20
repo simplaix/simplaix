@@ -37,7 +37,7 @@ export function mapToolToToolset(
     description: tool.description || '',
     parameters: jsonSchema(tool.inputSchema) as any,
     execute: async (args: any) => {
-      // console.log('calling server side tool', toolName, args);
+      console.log('calling server side tool', toolName, args);
       try {
         const resultPromise = (async () => {
           const toolResultId = generateUUID();
