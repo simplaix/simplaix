@@ -8,7 +8,7 @@ import { useEmailStore } from '../../toolbox/stores/emailStore';
 import { useUiVisiableStore } from '../../toolbox/stores/uiVisiableStore';
 import { DraftInputs } from '@/toolbox/tools/local/email/ui/draft-ui/draft-inputs';
 import { JiraTicketInputs } from '@/toolbox/tools/local/jira/ui/jira-ticket-inputs';
-
+import { Weather } from './weather';
 const JSONDialog = ({ result }: { result: any }) => {
   return (
     <Dialog>
