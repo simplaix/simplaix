@@ -9,6 +9,8 @@ export type LocalServerConfig = {
 export type MCPServerConfig = {
   command: string;
   args: string[];
+  clientTools: string[];
+  serverTools: string[];
 }
 
 export type MCPServers = {
@@ -20,6 +22,8 @@ export type ToolSetConfig = {
       [key: string]: {
         command: string;
         args: string[];
+        clientTools: string[];
+        serverTools: string[];
       };
     };
     // onCallTool is a function that will be called when a tool is called. It will be passed the server name, tool name, arguments, and a function that will resolve to the result of the tool call. Useful for timing the tool calls or doing other instrumentation like logging.
