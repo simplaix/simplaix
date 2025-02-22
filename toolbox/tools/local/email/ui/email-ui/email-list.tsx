@@ -35,7 +35,7 @@ export function InlineEmailList({
     <Button
       onClick={onClick}
       className={cx(
-        'flex flex-row gap-4 rounded-2xl p-4 bg-white hover:bg-gray-50 max-w-[300px] h-auto border border-gray-200'
+        'flex flex-row gap-4 rounded-2xl p-4 bg-gray-100 hover:bg-gray-100 max-w-[300px] h-auto border border-gray-200 text-black'
       )}
     >
       <div className="flex flex-col"> 
@@ -81,7 +81,7 @@ export function EmailList({
     <UIContainer onClose={onClose} title={UITitle}>
       <div className="flex flex-row">
         <div className= {selectedEmail ? "w-1/2 flex flex-row" : "w-full"}>
-          <ScrollArea className="h-[500px]">
+          <ScrollArea>
             <div className="flex flex-col gap-2">
               {emails.map((email) => (
                 <EmailCard
@@ -96,7 +96,7 @@ export function EmailList({
           </ScrollArea>
         </div>
         {selectedEmail && (
-        <div className="w-1/2 border rounded-lg max-h-[500px]">
+        <div className="w-1/2 border rounded-lg">
           <MailDisplay mail={selectedEmail} />
         </div>
       )}
