@@ -19,6 +19,7 @@ interface MessagesProps {
   ) => Promise<string | null | undefined>;
   isReadonly: boolean;
   isBlockVisible: boolean;
+  uiRegistry: Record<string, React.ComponentType<any>>;
 }
 
 function PureMessages({
@@ -29,6 +30,7 @@ function PureMessages({
   setMessages,
   reload,
   isReadonly,
+  uiRegistry,
 }: MessagesProps) {
   const [messagesContainerRef, messagesEndRef] =
     useScrollToBottom<HTMLDivElement>();
@@ -54,6 +56,7 @@ function PureMessages({
           setMessages={setMessages}
           reload={reload}
           isReadonly={isReadonly}
+          uiRegistry={uiRegistry}
         />
       ))}
 

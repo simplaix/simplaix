@@ -18,7 +18,7 @@ import { VisibilityType } from './visibility-selector';
 import { useBlockSelector } from '@/hooks/use-block';
 import { toast } from 'sonner';
 import { MiddleSection } from './middle-section';
-
+import { uiRegistry } from '@/toolbox/base/ui';
 export function Chat({
   id,
   initialMessages,
@@ -154,6 +154,7 @@ export function Chat({
             reload={reload}
             isReadonly={isReadonly}
             isBlockVisible={isBlockVisible}
+            uiRegistry={uiRegistry}
           />
 
           <form className="flex mx-auto px-4 bg-background pb-4 md:pb-6 gap-2 w-full md:max-w-3xl">

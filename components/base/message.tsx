@@ -55,6 +55,7 @@ const PurePreviewMessage = ({
   setMessages,
   reload,
   isReadonly,
+  uiRegistry,
 }: {
   chatId: string;
   message: Message;
@@ -67,6 +68,7 @@ const PurePreviewMessage = ({
     chatRequestOptions?: ChatRequestOptions,
   ) => Promise<string | null | undefined>;
   isReadonly: boolean;
+  uiRegistry: Record<string, React.ComponentType<any>>;
 }) => {
   const [mode, setMode] = useState<'view' | 'edit'>('view');
 
@@ -158,6 +160,7 @@ const PurePreviewMessage = ({
               </div>
             )}
 
+            {/* Tool calls related UI */}
             {message.toolInvocations && message.toolInvocations.length > 0 && (
               <div className="flex flex-col gap-4">
                 {message.toolInvocations.map((toolInvocation) => {
