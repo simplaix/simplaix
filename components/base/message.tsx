@@ -26,6 +26,7 @@ import { DocumentPreview } from './document-preview';
 import { MessageReasoning } from './message-reasoning';
 import { DialogTrigger , Dialog, DialogContent, DialogTitle } from '../ui/dialog';
 import { EmailList } from '@/toolbox/tools/local/email/ui/email-ui/email-list';
+import { UIRegistry, ClientToolName, ServerToolName } from '@/toolbox/base/ui';
 
 const JSONDialog = ({ result }: { result: any }) => {
   return (
@@ -66,7 +67,7 @@ const PurePreviewMessage = ({
     chatRequestOptions?: ChatRequestOptions,
   ) => Promise<string | null | undefined>;
   isReadonly: boolean;
-  uiRegistry: Record<string, React.ComponentType<any>>;
+  uiRegistry: UIRegistry;
 }) => {
   const [mode, setMode] = useState<'view' | 'edit'>('view');
 
@@ -167,9 +168,9 @@ const PurePreviewMessage = ({
                   console.log('toolInvocation', toolInvocation);
 
                   // 从 uiRegistry 获取对应的组件
-                  const ToolComponent = uiRegistry[toolName];
 
                   if (state === "call") {
+                    const ToolComponent = uiRegistry.client_tools[toolName as ClientToolName];
                     if (ToolComponent) {
                       return (
                         <ToolComponent
@@ -183,13 +184,13 @@ const PurePreviewMessage = ({
                   }
                   // Handle tool result UI
                   if (state === 'result') {
+                    const ToolComponent = uiRegistry.server_tools[toolName as ServerToolName];
                     const { result } = toolInvocation;
                     return (
                       <div key={toolCallId}>
                         {toolName === 'getWeather' ? (
                           <Weather 
-                            toolResultId={result.toolResultId}
-                            weatherAtLocation={result} 
+                            toolResult={toolInvocation}
                             isInline={true}
                           />
                         ) : toolName === 'createDocument' ? (
@@ -215,7 +216,6 @@ const PurePreviewMessage = ({
                             emails={result.data}
                             isInline={true}
                             onClose={() => {}}
-                            onSelect={(email) => {}}
                           />
                         ) : (
                           <div className="flex flex-col gap-2">
@@ -237,7 +237,7 @@ const PurePreviewMessage = ({
                       })}
                     >
                       {toolName === 'getWeather' ? (
-                        <Weather toolResultId={toolCallId} />
+                        <Weather toolResult={toolInvocation as any} />
                       ) : toolName === 'createDocument' ? (
                         <DocumentPreview isReadonly={isReadonly} args={args} />
                       ) : toolName === 'updateDocument' ? (

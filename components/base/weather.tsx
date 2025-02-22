@@ -6,6 +6,8 @@ import { useEffect, useState } from 'react';
 import { Button } from '../ui/button';
 import { UIContainer } from './ui-container';
 import { useUiVisiableStore } from '../../toolbox/stores/uiVisiableStore';
+import { ToolResult } from 'ai';
+
 const COMPONENT_NAME = 'Weather';
 
 interface WeatherAtLocation {
@@ -250,16 +252,18 @@ export function InlineWeather({
 }
 
 export function Weather({
-  toolResultId,
-  weatherAtLocation = SAMPLE,
+  toolResult,
   isInline = false,
   onClose,
 }: {
-  toolResultId: string;
-  weatherAtLocation?: WeatherAtLocation;
+  toolResult: ToolResult<string, string, any>;
   isInline?: boolean;
   onClose?: () => void;
 }) {
+  const { result } = toolResult;
+
+  const weatherAtLocation = result;
+
   const [isMobile, setIsMobile] = useState(false);
   const addVisiableUI = useUiVisiableStore((state) => state.addVisiableUI);
   useEffect(() => {
@@ -277,7 +281,7 @@ export function Weather({
     return (
       <InlineWeather
         weatherAtLocation={weatherAtLocation}
-        onClick={() => addVisiableUI(toolResultId)}
+        onClick={() => addVisiableUI(result.toolResultId)}
       />
     );
   }

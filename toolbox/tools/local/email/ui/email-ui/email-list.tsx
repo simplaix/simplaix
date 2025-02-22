@@ -15,7 +15,6 @@ const UITitle = 'Email Search Results';
 interface EmailListProps {
   emails: EmailResult[];
   toolResultId: string;
-  onSelect?: (email: EmailResult) => void;
   selectedId?: string;
   isInline?: boolean;
   onClose: () => void;
@@ -36,7 +35,7 @@ export function InlineEmailList({
     <Button
       onClick={onClick}
       className={cx(
-        'flex flex-row gap-4 rounded-2xl p-4 bg-gray-800 hover:bg-gray-100 max-w-[300px] h-auto border border-gray-200'
+        'flex flex-row gap-4 rounded-2xl p-4 bg-white hover:bg-gray-50 max-w-[300px] h-auto border border-gray-200'
       )}
     >
       <div className="flex flex-col"> 
@@ -56,11 +55,15 @@ export function EmailList({
   emails,
   isInline = false,
   onClose,
-  onSelect,
 }: EmailListProps) {
   const selectedEmail = useEmailStore((state) => state.selectedEmail);
   const setSelectedEmail = useEmailStore((state) => state.setSelectedEmail);
   const addVisiableUI = useUiVisiableStore((state) => state.addVisiableUI);
+
+  const onSelect = (email: EmailResult) => {
+    setSelectedEmail(email);
+    addVisiableUI(toolResultId);
+  }
 
   if (isInline) {
     return (

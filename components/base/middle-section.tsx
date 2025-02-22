@@ -6,10 +6,8 @@ import { DocumentPreview } from './document-preview';
 import { DialogTrigger , DialogContent, DialogTitle , Dialog } from '../ui/dialog';
 import { useEmailStore } from '../../toolbox/stores/emailStore';
 import { useUiVisiableStore } from '../../toolbox/stores/uiVisiableStore';
-import { DraftInputs } from '@/toolbox/tools/local/email/ui/draft-ui/draft-inputs';
-import { JiraTickets } from '@/toolbox/tools/local/jira/ui/jira-tickets';
 import { Weather } from './weather';
-import { uiRegistry } from '@/toolbox/base/ui';
+import { uiRegistry, ClientToolName, ServerToolName } from '@/toolbox/base/ui';
 
 const JSONDialog = ({ result }: { result: any }) => {
   return (
@@ -72,8 +70,7 @@ export function MiddleSection({ messages, addToolResult }: { messages: Message[]
             <div key={`${toolResult.toolName}-${index}`}>
               {toolResult.toolName === 'getWeather' ? (
                 <Weather 
-                  weatherAtLocation={toolResult.result} 
-                  toolResultId={toolResult.result.toolResultId}
+                  toolResult={toolResult}
                   onClose={() => removeVisiableUI(toolResult.result.toolResultId)}
                 />
               ) : toolResult.toolName === 'createDocument' ? (
@@ -88,7 +85,6 @@ export function MiddleSection({ messages, addToolResult }: { messages: Message[]
                   onClose={() => {
                     removeVisiableUI(toolResult.result.toolResultId);
                   }}
-                  onSelect={(email) => setSelectedEmail(email)}
                 />
               ) : (
                 <div className="flex flex-col gap-2">
@@ -102,7 +98,7 @@ export function MiddleSection({ messages, addToolResult }: { messages: Message[]
           ))}
 
           {visibleCalls.map((toolCall, index) => {
-            const ToolComponent = uiRegistry[toolCall.toolName];
+            const ToolComponent = uiRegistry.client_tools[toolCall.toolName as ClientToolName];
             if (ToolComponent) {
               return (
                 <div key={`${toolCall.toolName}-${index}`}>
