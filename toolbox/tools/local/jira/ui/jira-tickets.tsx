@@ -8,25 +8,31 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { JiraTicketData } from '../types/ticket';
 
 import { TicketCard } from './ticket-card';
-import { TicketsHeader } from './tickets-header';
 import { UIContainer } from '@/components/base/ui-container';
 import { v4 as uuidv4 } from 'uuid';
+import { ToolInvocation } from 'ai';
+
+export interface JiraTicketsProps {
+  toolInvocation: ToolInvocation;
+  isInline?: boolean;
+  addToolResult: ({toolCallId, result}: {toolCallId: string; result: any}) => void;
+}
 
 export function InlineJiraTickets({
   tickets,
-  toolCallId,
-  onClick,
+  toolCallId
 }: {
   tickets: JiraTicketData[];
   toolCallId: string;
-  onClick?: () => void;
 }) {
   if (!tickets.length) return null;
   const showJiraUI = useUiVisiableStore((state) => state.visiableUIs.has(toolCallId));
-
+  const addVisiableUI = useUiVisiableStore((state) => state.addVisiableUI);
   return (
     <Button
-      onClick={onClick}
+      onClick={() => {
+        addVisiableUI(toolCallId);
+      }}
       className={cx(
        'flex flex-row gap-4 rounded-2xl p-4 bg-gray-800 hover:bg-gray-100 max-w-[300px] h-auto border border-gray-200 text-black'
       )}
@@ -43,65 +49,54 @@ export function InlineJiraTickets({
   );
 }
 
-export function JiraTicketInputs({
-  toolCallId,
-  tickets,
-  onClose,
+export function JiraTickets({
+  toolInvocation,
   isInline = false,
-  addToolResult,
-}: {
-  toolCallId: string;
-  tickets: JiraTicketData[];
-  onClose: () => void;
-  isInline?: boolean;
-  addToolResult: ({toolCallId, result}: {toolCallId: string; result: any}) => void;
-}) {
-  const addVisiableUI = useUiVisiableStore((state) => state.addVisiableUI);
+  addToolResult = () => {},
+}: JiraTicketsProps) {
+  const { toolName, toolCallId, state, args } = toolInvocation;
 
-  const handleSave = async () => {
-    try {
-      console.log('tickets', tickets);
-      onClose();
-    } catch (error) {
-      console.error('Failed to save tickets:', error);
-    }
-  };
+  const tickets = args.requests;
+  const removeVisiableUI = useUiVisiableStore((state) => state.removeVisiableUI);
+
+  const handleClose = () => {
+    removeVisiableUI(toolCallId);
+  }
+
+  const handleSave = () => {
+    addToolResult({
+      toolCallId: toolCallId,
+      result: 'User has confirmed the tickets created are correct, now call save_jira_issues to save these tickets to Jira.',
+    });
+  }
 
   if (isInline) {
     return (
       <InlineJiraTickets
         tickets={tickets}
         toolCallId={toolCallId}
-        onClick={() => {
-          addVisiableUI(toolCallId);
-        }}
       />
     );
   }
 
   return (
-    <UIContainer title={`New Jira Tickets - ${tickets.length} tickets`} onClose={onClose}>
+    <UIContainer title={`New Jira Tickets - ${tickets.length} tickets`} onClose={handleClose}>
 
       <ScrollArea className="h-[600px] p-6">
         <div className="space-y-4">
-          {tickets.map((ticket, index) => (
+          {tickets.map((ticket: JiraTicketData, index: number) => (
             <TicketCard key={uuidv4()} ticket={ticket} index={index + 1}/>
           ))}
         </div>
       </ScrollArea>
       <div className="flex items-center justify-between pt-4">
         <div className="flex items-center gap-2">
-          <Button className="items-center" variant="outline" onClick={onClose}>
+          <Button className="items-center" variant="outline" onClick={handleClose}>
             Close
           </Button>
         </div>
         <div className="flex gap-2">
-          <Button className="items-center" onClick={() => {
-            addToolResult({
-              toolCallId: toolCallId,
-              result: 'User has confirmed the tickets created are correct, now call save_jira_issues to save these tickets to Jira.',
-            });
-          }}>
+          <Button className="items-center" onClick={handleSave}>
             Save to Jira
           </Button>
         </div>

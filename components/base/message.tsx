@@ -3,7 +3,7 @@
 import type { ChatRequestOptions, Message } from 'ai';
 import cx from 'classnames';
 import { AnimatePresence, motion } from 'framer-motion';
-import { memo, useMemo, useState } from 'react';
+import { memo, useState } from 'react';
 
 import type { Vote } from '@/lib/db/schema';
 
@@ -26,9 +26,7 @@ import { DocumentPreview } from './document-preview';
 import { MessageReasoning } from './message-reasoning';
 import { DialogTrigger , Dialog, DialogContent, DialogTitle } from '../ui/dialog';
 import { EmailList } from '@/toolbox/tools/local/email/ui/email-ui/email-list';
-import { DraftInputs } from '@/toolbox/tools/local/email/ui/draft-ui/draft-inputs';
-import { JiraTicketInputs } from '@/toolbox/tools/local/jira/ui/jira-ticket-inputs';
-import { v4 as uuidv4 } from 'uuid';
+
 const JSONDialog = ({ result }: { result: any }) => {
   return (
     <Dialog>
@@ -165,28 +163,18 @@ const PurePreviewMessage = ({
               <div className="flex flex-col gap-4">
                 {message.toolInvocations.map((toolInvocation) => {
                   const { toolName, toolCallId, state, args } = toolInvocation;
+                  
                   console.log('toolInvocation', toolInvocation);
+
+                  // 从 uiRegistry 获取对应的组件
+                  const ToolComponent = uiRegistry[toolName];
+
                   if (state === "call") {
-                    if (toolName === 'create_jira_issues') {
-                        return (
-                          <JiraTicketInputs
-                            key={toolCallId}
-                            toolCallId={toolCallId}
-                            tickets={args.requests}
-                            onClose={() => {}}
-                            isInline={true}
-                            addToolResult={() => {}}
-                          />
-                        );
-                    }
-                    else if (toolName === 'create_draft') {
-                      console.log('create_draft', args.draft);
+                    if (ToolComponent) {
                       return (
-                        <DraftInputs
+                        <ToolComponent
                           key={toolCallId}
-                          toolCallId={toolCallId}
-                          draftData={args.draft}
-                          onClose={() => {}}
+                          toolInvocation={toolInvocation}
                           isInline={true}
                           addToolResult={() => {}}
                         />

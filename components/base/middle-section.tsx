@@ -7,8 +7,10 @@ import { DialogTrigger , DialogContent, DialogTitle , Dialog } from '../ui/dialo
 import { useEmailStore } from '../../toolbox/stores/emailStore';
 import { useUiVisiableStore } from '../../toolbox/stores/uiVisiableStore';
 import { DraftInputs } from '@/toolbox/tools/local/email/ui/draft-ui/draft-inputs';
-import { JiraTicketInputs } from '@/toolbox/tools/local/jira/ui/jira-ticket-inputs';
+import { JiraTickets } from '@/toolbox/tools/local/jira/ui/jira-tickets';
 import { Weather } from './weather';
+import { uiRegistry } from '@/toolbox/base/ui';
+
 const JSONDialog = ({ result }: { result: any }) => {
   return (
     <Dialog>
@@ -99,26 +101,19 @@ export function MiddleSection({ messages, addToolResult }: { messages: Message[]
             </div>
           ))}
 
-          {visibleCalls.map((toolCall, index) => (
-            <div key={`${toolCall.toolName}-${index}`}>
-              {toolCall.toolName === 'create_jira_issues' ? (
-                <JiraTicketInputs
-                  toolCallId={toolCall.toolCallId}
-                  tickets={toolCall.args.requests}
-                  onClose={() => removeVisiableUI(toolCall.toolCallId)}
-                  addToolResult={addToolResult}
-                />
-              ) : toolCall.toolName === 'create_draft' ? (
-                <DraftInputs
-                  toolCallId={toolCall.toolCallId}
-                  draftData={toolCall.args.draft}
-                  onClose={() => removeVisiableUI(toolCall.toolCallId)}
-                  addToolResult={addToolResult}
-                />
-              ) : null}
-            </div>
-          ))}
-          
+          {visibleCalls.map((toolCall, index) => {
+            const ToolComponent = uiRegistry[toolCall.toolName];
+            if (ToolComponent) {
+              return (
+                <div key={`${toolCall.toolName}-${index}`}>
+                  <ToolComponent
+                    toolInvocation={toolCall}
+                    addToolResult={addToolResult}
+                  />
+                </div>
+              );
+            }
+          })}
         </div>
       </div>
     </div>
