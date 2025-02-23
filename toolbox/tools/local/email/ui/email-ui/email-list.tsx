@@ -1,7 +1,7 @@
 // components/email-ui/email-list.tsx
 
 import { Button } from '@/components/ui/button';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { EmailResult } from '@/toolbox/tools/local/email/types/email';
 import { useEmailStore } from '@/toolbox/stores/emailStore';
 import { UIContainer } from '@/components/base/ui-container';
@@ -80,7 +80,7 @@ export function EmailList({
   return (
     <UIContainer onClose={onClose} title={UITitle}>
       <div className="flex flex-row">
-        <div className= {selectedEmail ? "w-1/2" : "w-full"}>
+        <div className= "flex flex-1 min-w-[200px]">
           <ScrollArea>
             <div className="flex flex-col gap-2">
               {emails.map((email) => (
@@ -93,10 +93,11 @@ export function EmailList({
                 />
               ))}
             </div>
+            <ScrollBar orientation="vertical" />
           </ScrollArea>
         </div>
         {selectedEmail && (
-        <div className="w-1/2 border rounded-lg">
+        <div className="flex border rounded-lg flex-1">
           <MailDisplay mail={selectedEmail} />
         </div>
       )}

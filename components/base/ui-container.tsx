@@ -19,17 +19,17 @@ export function UIContainer({ children, onClose, className, title }: UIContainer
       exit={{ opacity: 0, scale: 0.5 }}
       transition={{ duration: 0.2 }}
     >
-    <div className={cx('relative flex flex-col shadow-lg bg-white rounded-2xl min-w-[500px]', className)}>
-      <div className="relative h-15 flex items-center justify-between px-2 border-b">
-        <p className="text-sm text-muted-foreground pl-5 overflow-hidden text-ellipsis">{title}</p>
+    <div className={cx('relative flex flex-col shadow-lg bg-white rounded-2xl w-full min-w-[500px]', className)}>
+      <div className="relative h-15 flex items-center justify-between px-2 border-b flex-row">
+        <p className="text-sm text-muted-foreground pl-5 overflow-hidden text-ellipsis flex-1">{title}</p>
         {onClose && (
           <Button
             variant="ghost"
             size="icon"
-            className="text-muted-foreground hover:text-foreground"
+            className="text-muted-foreground"
             onClick={onClose}
           >
-            <CloseIcon className="size-4 text-muted-foreground hover:text-foreground" />
+            <CloseIcon className="size-4 text-muted-foreground" />
           </Button>
         )}
         </div>

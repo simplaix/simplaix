@@ -52,7 +52,7 @@ export function MiddleSection({ messages, addToolResult }: { messages: Message[]
   console.log('visibleCalls', visibleCalls);
   if (visibleResults.length === 0 && visibleCalls.length === 0) {
     return (
-      <div className="flex flex-col h-full flex-1">
+      <div className="flex flex-col h-full">
         <div className="flex-1 bg-white overflow-y-auto">
           <div className="h-full flex items-center justify-center text-muted-foreground">
             No active content
@@ -63,8 +63,8 @@ export function MiddleSection({ messages, addToolResult }: { messages: Message[]
   }
 
   return (
-    <div className="flex flex-col h-full flex-1">
-      <div className="flex-1 bg-white overflow-y-auto">
+    <div className="flex flex-col h-full">
+      <div className="flex-1 bg-white overflow-y-auto overflow-x-hidden">
         <div className="p-4 grid gap-4 justify-items-center">
           {visibleResults.map((toolResult, index) => (
             <div key={`${toolResult.toolName}-${index}`}>
