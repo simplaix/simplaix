@@ -19,6 +19,7 @@ import { useBlockSelector } from '@/hooks/use-block';
 import { toast } from 'sonner';
 import { MiddleSection } from './middle-section';
 import { uiRegistry } from '@/toolbox/base/ui';
+
 export function Chat({
   id,
   initialMessages,

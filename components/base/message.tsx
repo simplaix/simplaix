@@ -7,7 +7,6 @@ import { memo, useState } from 'react';
 
 import type { Vote } from '@/lib/db/schema';
 
-import { DocumentToolCall, DocumentToolResult } from './document';
 import {
   PencilEditIcon,
   SimplaixIcon,
@@ -16,16 +15,13 @@ import {
 import { Markdown } from './markdown';
 import { MessageActions } from './message-actions';
 import { PreviewAttachment } from './preview-attachment';
-import { Weather } from './weather';
 import equal from 'fast-deep-equal';
 import { cn } from '@/lib/utils';
 import { Button } from '../ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
 import { MessageEditor } from './message-editor';
-import { DocumentPreview } from './document-preview';
 import { MessageReasoning } from './message-reasoning';
 import { DialogTrigger , Dialog, DialogContent, DialogTitle } from '../ui/dialog';
-import { EmailList } from '@/toolbox/tools/local/email/ui/email-ui/email-list';
 import { UIRegistry, ClientToolName, ServerToolName } from '@/toolbox/base/ui';
 
 const JSONDialog = ({ result }: { result: any }) => {

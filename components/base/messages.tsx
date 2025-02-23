@@ -5,7 +5,7 @@ import { Overview } from './overview';
 import { memo } from 'react';
 import { Vote } from '@/lib/db/schema';
 import equal from 'fast-deep-equal';
-
+import { UIRegistry } from '@/toolbox/base/ui';
 interface MessagesProps {
   chatId: string;
   isLoading: boolean;
@@ -19,7 +19,7 @@ interface MessagesProps {
   ) => Promise<string | null | undefined>;
   isReadonly: boolean;
   isBlockVisible: boolean;
-  uiRegistry: Record<string, React.ComponentType<any>>;
+  uiRegistry: UIRegistry;
 }
 
 function PureMessages({
