@@ -260,9 +260,10 @@ export function Weather({
   isInline?: boolean;
   onClose?: () => void;
 }) {
+  console.log('weather', toolResult);
   const { result } = toolResult;
 
-  const weatherAtLocation = result;
+  const weatherAtLocation = result.data;
 
   const [isMobile, setIsMobile] = useState(false);
   const addVisiableUI = useUiVisiableStore((state) => state.addVisiableUI);
@@ -301,7 +302,7 @@ export function Weather({
   const hoursToShow = isMobile ? 5 : 6;
 
   const currentTimeIndex = weatherAtLocation.hourly.time.findIndex(
-    (time) => new Date(time) >= new Date(weatherAtLocation.current.time)
+    (time: string) => new Date(time) >= new Date(weatherAtLocation.current.time)
   );
 
   const displayTimes = weatherAtLocation.hourly.time.slice(
@@ -344,7 +345,7 @@ export function Weather({
         </div>
 
         <div className="flex flex-row justify-between">
-          {displayTimes.map((time, index) => (
+          {displayTimes.map((time: string, index: number) => (
             <div key={time} className="flex flex-col items-center gap-1">
               <div className="text-blue-100 text-xs">
                 {format(new Date(time), 'ha')}

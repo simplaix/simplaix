@@ -214,7 +214,7 @@ export function MailDisplay({ mail }: MailDisplayProps) {
           <Separator />
           <ScrollArea className="h-[600px]">  
           <div
-            className="flex flex-1 overflow-auto p-4 text-sm w-full break-words max-w-full [&_img]:max-w-full [&_img]:h-auto [&_*]:max-w-full md:px-6 lg:px-8"
+            className="flex flex-1 overflow-hidden p-4 text-sm w-full break-words max-w-full [&_img]:max-w-full [&_img]:h-auto [&_*]:max-w-full md:px-6 lg:px-8"
             dangerouslySetInnerHTML={{ __html: mail.htmlBody }}
           />
            <ScrollBar orientation="vertical" className="h-full" />

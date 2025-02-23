@@ -29,8 +29,8 @@ export function InlineEmailList({
   onClick?: () => void;
   toolResultId: string;
 }) {
-  if (!emails.length) return null;
   const showEmailUI = useUiVisiableStore((state) => state.visiableUIs.has(toolResultId));
+  if (!emails.length) return null;
   return (
     <Button
       onClick={onClick}
@@ -80,7 +80,7 @@ export function EmailList({
   return (
     <UIContainer onClose={onClose} title={UITitle}>
       <div className="flex flex-row">
-        <div className= {selectedEmail ? "w-1/2 flex flex-row" : "w-full"}>
+        <div className= {selectedEmail ? "w-1/2" : "w-full"}>
           <ScrollArea>
             <div className="flex flex-col gap-2">
               {emails.map((email) => (
