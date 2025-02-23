@@ -1,0 +1,11 @@
+[project]
+name = "jira-server"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "httpx>=0.28.1",
+    "jira>=3.8.0",
+    "mcp[cli]>=1.2.1",
+]

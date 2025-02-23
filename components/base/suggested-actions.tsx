@@ -32,8 +32,8 @@ function PureSuggestedActions({ chatId, append }: SuggestedActionsProps) {
     },
     {
       title: 'What is the weather',
-      label: 'in San Francisco?',
-      action: 'What is the weather in San Francisco?',
+      label: 'in Paris?',
+      action: 'What is the weather in Paris?',
     },
   ];
 

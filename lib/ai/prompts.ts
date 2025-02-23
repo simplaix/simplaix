@@ -32,7 +32,7 @@ Do not update document right after creating it. Wait for user feedback or reques
 `;
 
 export const regularPrompt =
-  'You are a friendly assistant! Keep your responses concise and helpful.';
+  'You are a friendly assistant! Keep your responses concise and helpful. If you need multiple steps (tool calls) to achieve user goals, do it step by step.';
 
 export const systemPrompt = ({
   selectedChatModel,
@@ -42,7 +42,8 @@ export const systemPrompt = ({
   if (selectedChatModel === 'chat-model-reasoning') {
     return regularPrompt;
   } else {
-    return `${regularPrompt}\n\n${blocksPrompt}`;
+    // return `${regularPrompt}\n\n${blocksPrompt}`;
+    return regularPrompt;
   }
 };
 

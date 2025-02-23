@@ -1,7 +1,7 @@
 // components/email-ui/email-list.tsx
 
 import { Button } from '@/components/ui/button';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { EmailResult } from '@/toolbox/tools/local/email/types/email';
 import { useEmailStore } from '@/toolbox/stores/emailStore';
 import { UIContainer } from '@/components/base/ui-container';
@@ -15,7 +15,6 @@ const UITitle = 'Email Search Results';
 interface EmailListProps {
   emails: EmailResult[];
   toolResultId: string;
-  onSelect?: (email: EmailResult) => void;
   selectedId?: string;
   isInline?: boolean;
   onClose: () => void;
@@ -30,13 +29,13 @@ export function InlineEmailList({
   onClick?: () => void;
   toolResultId: string;
 }) {
-  if (!emails.length) return null;
   const showEmailUI = useUiVisiableStore((state) => state.visiableUIs.has(toolResultId));
+  if (!emails.length) return null;
   return (
     <Button
       onClick={onClick}
       className={cx(
-        'flex flex-row gap-4 rounded-2xl p-4 bg-gray-800 hover:bg-gray-100 max-w-[300px] h-auto border border-gray-200'
+        'flex flex-row gap-4 rounded-2xl p-4 bg-gray-100 hover:bg-gray-100 max-w-[300px] h-auto border border-gray-200 text-black'
       )}
     >
       <div className="flex flex-col"> 
@@ -56,11 +55,15 @@ export function EmailList({
   emails,
   isInline = false,
   onClose,
-  onSelect,
 }: EmailListProps) {
   const selectedEmail = useEmailStore((state) => state.selectedEmail);
   const setSelectedEmail = useEmailStore((state) => state.setSelectedEmail);
   const addVisiableUI = useUiVisiableStore((state) => state.addVisiableUI);
+
+  const onSelect = (email: EmailResult) => {
+    setSelectedEmail(email);
+    addVisiableUI(toolResultId);
+  }
 
   if (isInline) {
     return (
@@ -77,8 +80,8 @@ export function EmailList({
   return (
     <UIContainer onClose={onClose} title={UITitle}>
       <div className="flex flex-row">
-        <div className= {selectedEmail ? "w-1/2 flex flex-row" : "w-full"}>
-          <ScrollArea className="h-[500px]">
+        <div className= "flex flex-1 min-w-[200px]">
+          <ScrollArea>
             <div className="flex flex-col gap-2">
               {emails.map((email) => (
                 <EmailCard
@@ -90,10 +93,11 @@ export function EmailList({
                 />
               ))}
             </div>
+            <ScrollBar orientation="vertical" />
           </ScrollArea>
         </div>
         {selectedEmail && (
-        <div className="w-1/2 border rounded-lg max-h-[500px]">
+        <div className="flex border rounded-lg flex-1">
           <MailDisplay mail={selectedEmail} />
         </div>
       )}

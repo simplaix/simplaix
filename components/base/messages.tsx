@@ -5,7 +5,7 @@ import { Overview } from './overview';
 import { memo } from 'react';
 import { Vote } from '@/lib/db/schema';
 import equal from 'fast-deep-equal';
-
+import { UIRegistry } from '@/toolbox/base/ui';
 interface MessagesProps {
   chatId: string;
   isLoading: boolean;
@@ -19,6 +19,7 @@ interface MessagesProps {
   ) => Promise<string | null | undefined>;
   isReadonly: boolean;
   isBlockVisible: boolean;
+  uiRegistry: UIRegistry;
 }
 
 function PureMessages({
@@ -29,6 +30,7 @@ function PureMessages({
   setMessages,
   reload,
   isReadonly,
+  uiRegistry,
 }: MessagesProps) {
   const [messagesContainerRef, messagesEndRef] =
     useScrollToBottom<HTMLDivElement>();
@@ -54,6 +56,7 @@ function PureMessages({
           setMessages={setMessages}
           reload={reload}
           isReadonly={isReadonly}
+          uiRegistry={uiRegistry}
         />
       ))}
 

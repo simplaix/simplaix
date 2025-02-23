@@ -1,0 +1,6 @@
+{
+  "jira": {
+    "client_tools": ["create_jira_issues"],
+    "server_tools": ["save_jira_issues"]
+  }
+}

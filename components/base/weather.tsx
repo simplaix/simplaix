@@ -6,6 +6,8 @@ import { useEffect, useState } from 'react';
 import { Button } from '../ui/button';
 import { UIContainer } from './ui-container';
 import { useUiVisiableStore } from '../../toolbox/stores/uiVisiableStore';
+import { ToolResult } from 'ai';
+
 const COMPONENT_NAME = 'Weather';
 
 interface WeatherAtLocation {
@@ -250,18 +252,17 @@ export function InlineWeather({
 }
 
 export function Weather({
-  toolResultId,
-  weatherAtLocation = SAMPLE,
+  toolResult,
   isInline = false,
   onClose,
 }: {
-  toolResultId: string;
-  weatherAtLocation?: WeatherAtLocation;
+  toolResult: ToolResult<string, string, any>;
   isInline?: boolean;
   onClose?: () => void;
 }) {
   const [isMobile, setIsMobile] = useState(false);
   const addVisiableUI = useUiVisiableStore((state) => state.addVisiableUI);
+  
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768);
@@ -269,18 +270,17 @@ export function Weather({
 
     handleResize();
     window.addEventListener('resize', handleResize);
-
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  if (isInline) {
-    return (
-      <InlineWeather
-        weatherAtLocation={weatherAtLocation}
-        onClick={() => addVisiableUI(toolResultId)}
-      />
-    );
+  if (!toolResult || !toolResult.result) {
+    return null;
   }
+
+  const { result } = toolResult;
+  const weatherAtLocation = result.data;
+
+  console.log('weather', toolResult);
 
   const currentHigh = Math.max(
     ...weatherAtLocation.hourly.temperature_2m.slice(0, 24)
@@ -297,7 +297,7 @@ export function Weather({
   const hoursToShow = isMobile ? 5 : 6;
 
   const currentTimeIndex = weatherAtLocation.hourly.time.findIndex(
-    (time) => new Date(time) >= new Date(weatherAtLocation.current.time)
+    (time: string) => new Date(time) >= new Date(weatherAtLocation.current.time)
   );
 
   const displayTimes = weatherAtLocation.hourly.time.slice(
@@ -308,6 +308,15 @@ export function Weather({
     currentTimeIndex,
     currentTimeIndex + hoursToShow
   );
+
+  if (isInline) {
+    return (
+      <InlineWeather
+        weatherAtLocation={weatherAtLocation}
+        onClick={() => addVisiableUI(result.toolResultId)}
+      />
+    );
+  }
 
   return (
     <UIContainer onClose={onClose} title={COMPONENT_NAME}>
@@ -340,7 +349,7 @@ export function Weather({
         </div>
 
         <div className="flex flex-row justify-between">
-          {displayTimes.map((time, index) => (
+          {displayTimes.map((time: string, index: number) => (
             <div key={time} className="flex flex-col items-center gap-1">
               <div className="text-blue-100 text-xs">
                 {format(new Date(time), 'ha')}

@@ -21,8 +21,16 @@ export function mapToolToToolset(
   streamingData: DataStreamWriter
 ): ToolDefinition {
   let toolName = tool.name;
-  if (toolName !== serverName) {
-    toolName = `server_tool_${toolName}`;
+
+  const clientTools = config.mcpServers[serverName].clientTools;
+  const serverTools = config.mcpServers[serverName].serverTools;
+
+  console.log('clientTools', clientTools, 'serverTools', serverTools);
+  if (clientTools.includes(toolName) && !serverTools.includes(toolName)) {
+    return {
+      description: tool.description || '',
+      parameters: jsonSchema(tool.inputSchema) as any,
+    };
   }
 
   return {

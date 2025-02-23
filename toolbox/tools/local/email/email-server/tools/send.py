@@ -8,16 +8,15 @@ from .account import build_gmail_service, check_gmail_token_file
 
 
 def send_message(
-    draft_before_send: bool,
     to: str,
     subject: str,
     content: str,
     from_: Optional[str] = None,
 ) -> dict:
-    """Send an email message using Gmail API
+    """Send an email message using Gmail API.
+    Always call the draft tool to show the draft to human and ask for confirmation before send.
 
     Args:
-        service: Gmail API service instance
         to: Email address of the receiver
         subject: Subject of the email
         content: Content of the email
@@ -26,14 +25,8 @@ def send_message(
     Returns:
         dict: Message object, including message id
     """
-    if (
-        not draft_before_send
-    ):  # TODO: implement a better control of draft before send
-        raise RuntimeError("Draft and show the draft to human before send")
     if not check_gmail_token_file():
-        raise ValueError(
-            "No valid token file found. Please login to Gmail first."
-        )
+        raise ValueError("No valid token file found. Please login to Gmail first.")
 
     try:
         gmail_service = build_gmail_service()

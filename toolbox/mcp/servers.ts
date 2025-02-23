@@ -25,31 +25,43 @@ export async function loadToolConfig(configPath?: string): Promise<MCPServers> {
   try {
     const configData = await fs.readFile(finalPath, 'utf8');
     const loadedConfig = JSON.parse(configData);
-    const config = loadedConfig.type === "local" ? loadedConfig as LocalServerConfig : loadedConfig as MCPServers;
+    const toolBoxConfig = loadedConfig.type === "local" ? loadedConfig as LocalServerConfig : loadedConfig as MCPServers;
     const configs: MCPServers = {};
     // Process Python servers
-    for (const [name, cfg] of Object.entries(config)) {
-        let serverConfig: MCPServerConfig;
-        if (cfg.language === 'python') {
-            // For Python servers using uv, ensure paths are absolute
-            console.log("localServerPath", localServerPath);
-            serverConfig = {
-                command: "uv",
-                args: [
-                        "--directory",
-                        path.join(localServerPath, name, `${name}-server`),
-                        "run",
-                        "main.py"
-                    ]
-            }
-        }
-        else {
-            serverConfig = {
-                command: cfg.command,
-                args: cfg.args
-            }
-        }
-        configs[name] = serverConfig;
+    // iterate over the server configs
+    for (const [name, cfg] of Object.entries(toolBoxConfig)) {
+      let serverConfig: MCPServerConfig;
+
+
+      let toolConfigPath = path.join(localServerPath, name, `tool_config.json`);
+      console.log("toolConfigPath", toolConfigPath);
+      const toolConfigData = await fs.readFile(toolConfigPath, 'utf8');
+      const toolConfig = JSON.parse(toolConfigData);
+      console.log("toolConfig", toolConfig);
+      if (cfg.language === 'python') {
+          // For Python servers using uv, ensure paths are absolute
+          console.log("localServerPath", localServerPath, name);
+          serverConfig = {
+              command: "uv",
+              args: [
+                      "--directory",
+                      path.join(localServerPath, name, `${name}-server`),
+                      "run",
+                      "main.py"
+                  ],
+              clientTools: toolConfig[name].client_tools,
+              serverTools: toolConfig[name].server_tools
+          }
+      }
+      else {
+          serverConfig = {
+              command: cfg.command,
+              args: cfg.args,
+              clientTools: toolConfig.client_tools,
+              serverTools: toolConfig.server_tools
+          }
+      }
+      configs[name] = serverConfig;
     }
     validateMCPServers(configs);
     return configs;
