@@ -25,15 +25,15 @@ export class ToolManager {
     streamingData: DataStreamWriter,
     onCallTool?: ToolSetConfig['onCallTool'],
   ): Promise<ToolSet> {
-    const mcpServers = await loadToolConfig();
-    this.config = { mcpServers, onCallTool };
+    const mcpServersConfigs = await loadToolConfig();
+    this.config = { mcpServers: mcpServersConfigs, onCallTool };
 
-    validateMCPServers(this.config.mcpServers);
+    validateMCPServers(mcpServersConfigs);
 
     // Reset state for fresh load
     this.toolset = { tools: {}, clients: {} };
 
-    for (const [serverName, serverConfig] of Object.entries(this.config.mcpServers)) {
+    for (const [serverName, serverConfig] of Object.entries(mcpServersConfigs)) {
       const client = await createMCPClient(serverConfig);
       this.toolset.clients[serverName] = client;
 

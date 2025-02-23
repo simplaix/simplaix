@@ -14,7 +14,7 @@ def send_message(
     from_: Optional[str] = None,
 ) -> dict:
     """Send an email message using Gmail API.
-    Always show the draft to human and ask for confirmation before send.
+    Always call the draft tool to show the draft to human and ask for confirmation before send.
 
     Args:
         to: Email address of the receiver

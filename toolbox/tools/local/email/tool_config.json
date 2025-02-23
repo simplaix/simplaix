@@ -1,0 +1,6 @@
+{
+  "email": {
+    "client_tools": ["create_draft"],
+    "server_tools": ["search_messages", "send_message", "gmail_login"]
+  }
+}

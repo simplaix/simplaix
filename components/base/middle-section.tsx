@@ -1,14 +1,13 @@
 'use client';
 
 import { EmailList } from '@/toolbox/tools/local/email/ui/email-ui/email-list';
-import type { Attachment, Message, ToolResult } from 'ai';
+import type {Message } from 'ai';
 import { DocumentPreview } from './document-preview';
-import { Weather } from './weather';
 import { DialogTrigger , DialogContent, DialogTitle , Dialog } from '../ui/dialog';
 import { useEmailStore } from '../../toolbox/stores/emailStore';
 import { useUiVisiableStore } from '../../toolbox/stores/uiVisiableStore';
-import { DraftInputs } from '@/toolbox/tools/local/email/ui/draft-ui/draft-inputs';
-import { JiraTicketInputs } from '@/toolbox/tools/local/jira/ui/jira-ticket-inputs';
+import { Weather } from './weather';
+import { uiRegistry, ClientToolName, ServerToolName } from '@/toolbox/base/ui';
 
 const JSONDialog = ({ result }: { result: any }) => {
   return (
@@ -29,7 +28,6 @@ const JSONDialog = ({ result }: { result: any }) => {
 };
 
 export function MiddleSection({ messages, addToolResult }: { messages: Message[], addToolResult: ({toolCallId, result}: {toolCallId: string; result: any}) => void }) {
-  const setSelectedEmail = useEmailStore((state) => state.setSelectedEmail);
   const visiableUIs = useUiVisiableStore((state) => state.visiableUIs);
   const removeVisiableUI = useUiVisiableStore((state) => state.removeVisiableUI);
 
@@ -51,9 +49,10 @@ export function MiddleSection({ messages, addToolResult }: { messages: Message[]
   const visibleCalls = toolCalls.filter(call => shouldShow(call.toolName, call.toolCallId));
 
   console.log('visibleCalls', visibleCalls);
+  console.log('visibleResults', visibleResults);
   if (visibleResults.length === 0 && visibleCalls.length === 0) {
     return (
-      <div className="flex flex-col h-full flex-1">
+      <div className="flex flex-col h-full">
         <div className="flex-1 bg-white overflow-y-auto">
           <div className="h-full flex items-center justify-center text-muted-foreground">
             No active content
@@ -64,15 +63,27 @@ export function MiddleSection({ messages, addToolResult }: { messages: Message[]
   }
 
   return (
-    <div className="flex flex-col h-full flex-1">
-      <div className="flex-1 bg-white overflow-y-auto">
+    <div className="flex flex-col h-full">
+      <div className="flex-1 bg-white overflow-y-auto overflow-x-hidden">
         <div className="p-4 grid gap-4 justify-items-center">
-          {visibleResults.map((toolResult, index) => (
+          {visibleResults.map((toolResult, index) => {
+            const ToolComponent = uiRegistry.server_tools[toolResult.toolName as ServerToolName];
+            if (ToolComponent) {
+              return (
+                <div key={`${toolResult.toolName}-${index}`}>
+                  <ToolComponent 
+                    toolResult={toolResult}
+                    onClose={() => removeVisiableUI(toolResult.result.toolResultId)}
+                  />
+                </div>
+              );
+            }
+          })}
+          {/* {visibleResults.map((toolResult, index) => (
             <div key={`${toolResult.toolName}-${index}`}>
               {toolResult.toolName === 'getWeather' ? (
                 <Weather 
-                  weatherAtLocation={toolResult.result} 
-                  toolResultId={toolResult.result.toolResultId}
+                  toolResult={toolResult}
                   onClose={() => removeVisiableUI(toolResult.result.toolResultId)}
                 />
               ) : toolResult.toolName === 'createDocument' ? (
@@ -87,39 +98,31 @@ export function MiddleSection({ messages, addToolResult }: { messages: Message[]
                   onClose={() => {
                     removeVisiableUI(toolResult.result.toolResultId);
                   }}
-                  onSelect={(email) => setSelectedEmail(email)}
                 />
               ) : (
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col gap-2"> */}
                   {/* <pre className="text-sm text-muted-foreground overflow-x-auto whitespace-pre-wrap break-words max-w-full">
                     {JSON.stringify(toolResult.result, null, 2)}
                   </pre> */}
                   {/* <JSONDialog result={toolResult.result} /> */}
-                </div>
+                {/* </div>
               )}
             </div>
-          ))}
+          ))} */}
 
-          {visibleCalls.map((toolCall, index) => (
-            <div key={`${toolCall.toolName}-${index}`}>
-              {toolCall.toolName === 'create_jira_issues' ? (
-                <JiraTicketInputs
-                  toolCallId={toolCall.toolCallId}
-                  tickets={toolCall.args.requests}
-                  onClose={() => removeVisiableUI(toolCall.toolCallId)}
-                  addToolResult={addToolResult}
-                />
-              ) : toolCall.toolName === 'create_draft' ? (
-                <DraftInputs
-                  toolCallId={toolCall.toolCallId}
-                  draftData={toolCall.args.draft}
-                  onClose={() => removeVisiableUI(toolCall.toolCallId)}
-                  addToolResult={addToolResult}
-                />
-              ) : null}
-            </div>
-          ))}
-          
+          {visibleCalls.map((toolCall, index) => {
+            const ToolComponent = uiRegistry.client_tools[toolCall.toolName as ClientToolName];
+            if (ToolComponent) {
+              return (
+                <div key={`${toolCall.toolName}-${index}`}>
+                  <ToolComponent
+                    toolInvocation={toolCall}
+                    addToolResult={addToolResult}
+                  />
+                </div>
+              );
+            }
+          })}
         </div>
       </div>
     </div>

@@ -1,6 +1,6 @@
 import { tool } from 'ai';
 import { z } from 'zod';
-
+import { generateUUID } from '@/lib/utils';
 export const getWeather = tool({
   description: 'Get the current weather at a location',
   parameters: z.object({
@@ -13,6 +13,9 @@ export const getWeather = tool({
     );
 
     const weatherData = await response.json();
-    return weatherData;
+    return {
+      toolResultId: generateUUID(),
+      data: weatherData,
+    };
   },
 });

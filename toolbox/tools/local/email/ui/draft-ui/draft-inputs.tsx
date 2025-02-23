@@ -14,6 +14,8 @@ import { cn } from '@/lib/utils';
 import { DraftData } from '@/toolbox/tools/local/email/types/draft';
 import { useUiVisiableStore } from '@/toolbox/stores/uiVisiableStore';
 import { UIContainer } from '@/components/base/ui-container';
+import { ToolInvocation } from 'ai';
+
 const UITitle = 'New Email Draft';
 
 export function InlineDraftInput({
@@ -46,25 +48,27 @@ export function InlineDraftInput({
 }
 
 export function DraftInputs({
-  draftData,
-  onClose,
+  toolInvocation,
   isInline = false,
-  toolCallId,
   addToolResult,
 }: {
   className?: string;
-  draftData: DraftData;
-  onClose: () => void;
+  toolInvocation: ToolInvocation;
   isInline?: boolean;
-  toolCallId: string;
   addToolResult: ({toolCallId, result}: {toolCallId: string; result: any}) => void;
 }) {
-
+  const { toolName, toolCallId, state, args } = toolInvocation;
+  const removeVisiableUI = useUiVisiableStore((state) => state.removeVisiableUI);
+  const draftData = args.draft;
 
   const [draft, setDraft] = useState(draftData);
   const [isSending, setIsSending] = useState(false);
   const [showCc, setShowCc] = useState(!!draft.recipients.cc?.length);
   const [showBcc, setShowBcc] = useState(!!draft.recipients.bcc?.length);
+
+  const onClose = () => {
+    removeVisiableUI(toolCallId);
+  }
 
   const handleSendEmail = async () => {
     try {

@@ -3,11 +3,10 @@
 import type { ChatRequestOptions, Message } from 'ai';
 import cx from 'classnames';
 import { AnimatePresence, motion } from 'framer-motion';
-import { memo, useMemo, useState } from 'react';
+import { memo, useState } from 'react';
 
 import type { Vote } from '@/lib/db/schema';
 
-import { DocumentToolCall, DocumentToolResult } from './document';
 import {
   PencilEditIcon,
   SimplaixIcon,
@@ -16,19 +15,15 @@ import {
 import { Markdown } from './markdown';
 import { MessageActions } from './message-actions';
 import { PreviewAttachment } from './preview-attachment';
-import { Weather } from './weather';
 import equal from 'fast-deep-equal';
 import { cn } from '@/lib/utils';
 import { Button } from '../ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
 import { MessageEditor } from './message-editor';
-import { DocumentPreview } from './document-preview';
 import { MessageReasoning } from './message-reasoning';
 import { DialogTrigger , Dialog, DialogContent, DialogTitle } from '../ui/dialog';
-import { EmailList } from '@/toolbox/tools/local/email/ui/email-ui/email-list';
-import { DraftInputs } from '@/toolbox/tools/local/email/ui/draft-ui/draft-inputs';
-import { JiraTicketInputs } from '@/toolbox/tools/local/jira/ui/jira-ticket-inputs';
-import { v4 as uuidv4 } from 'uuid';
+import { UIRegistry, ClientToolName, ServerToolName } from '@/toolbox/base/ui';
+
 const JSONDialog = ({ result }: { result: any }) => {
   return (
     <Dialog>
@@ -55,6 +50,7 @@ const PurePreviewMessage = ({
   setMessages,
   reload,
   isReadonly,
+  uiRegistry,
 }: {
   chatId: string;
   message: Message;
@@ -67,6 +63,7 @@ const PurePreviewMessage = ({
     chatRequestOptions?: ChatRequestOptions,
   ) => Promise<string | null | undefined>;
   isReadonly: boolean;
+  uiRegistry: UIRegistry;
 }) => {
   const [mode, setMode] = useState<'view' | 'edit'>('view');
 
@@ -158,32 +155,25 @@ const PurePreviewMessage = ({
               </div>
             )}
 
+            {/* Tool calls related UI */}
             {message.toolInvocations && message.toolInvocations.length > 0 && (
               <div className="flex flex-col gap-4">
                 {message.toolInvocations.map((toolInvocation) => {
                   const { toolName, toolCallId, state, args } = toolInvocation;
+                  
                   console.log('toolInvocation', toolInvocation);
+
+                  // 从 uiRegistry 获取对应的组件
+
                   if (state === "call") {
-                    if (toolName === 'create_jira_issues') {
-                        return (
-                          <JiraTicketInputs
-                            key={toolCallId}
-                            toolCallId={toolCallId}
-                            tickets={args.requests}
-                            onClose={() => {}}
-                            isInline={true}
-                            addToolResult={() => {}}
-                          />
-                        );
-                    }
-                    else if (toolName === 'create_draft') {
-                      console.log('create_draft', args.draft);
+                    console.log('toolName in call', toolName);
+                    const ToolComponent = uiRegistry.client_tools[toolName as ClientToolName];
+                    if (ToolComponent) {
+                      console.log('ToolComponent in call', ToolComponent);
                       return (
-                        <DraftInputs
+                        <ToolComponent
                           key={toolCallId}
-                          toolCallId={toolCallId}
-                          draftData={args.draft}
-                          onClose={() => {}}
+                          toolInvocation={toolInvocation}
                           isInline={true}
                           addToolResult={() => {}}
                         />
@@ -192,39 +182,17 @@ const PurePreviewMessage = ({
                   }
                   // Handle tool result UI
                   if (state === 'result') {
+                    console.log('toolName in result', toolName);
+                    const hasInlineUI = Object.keys(uiRegistry.server_tools).includes(toolName);
+                    const ToolComponent = uiRegistry.server_tools[toolName as ServerToolName];
+                    console.log('ToolComponent in result', ToolComponent);
                     const { result } = toolInvocation;
                     return (
                       <div key={toolCallId}>
-                        {toolName === 'getWeather' ? (
-                          <Weather 
-                            toolResultId={result.toolResultId}
-                            weatherAtLocation={result} 
+                        {hasInlineUI && ToolComponent ? (
+                          <ToolComponent
+                            toolResult={toolInvocation}
                             isInline={true}
-                          />
-                        ) : toolName === 'createDocument' ? (
-                          <DocumentPreview
-                            isReadonly={isReadonly}
-                            result={result}
-                          />
-                        ) : toolName === 'updateDocument' ? (
-                          <DocumentToolResult
-                            type="update"
-                            result={result}
-                            isReadonly={isReadonly}
-                          />
-                        ) : toolName === 'requestSuggestions' ? (
-                          <DocumentToolResult
-                            type="request-suggestions"
-                            result={result}
-                            isReadonly={isReadonly}
-                          />
-                        ) : toolName === 'search_messages' ? (
-                          <EmailList
-                            toolResultId={result.toolResultId}
-                            emails={result.data}
-                            isInline={true}
-                            onClose={() => {}}
-                            onSelect={(email) => {}}
                           />
                         ) : (
                           <div className="flex flex-col gap-2">
@@ -245,8 +213,8 @@ const PurePreviewMessage = ({
                         skeleton: ['getWeather'].includes(toolName),
                       })}
                     >
-                      {toolName === 'getWeather' ? (
-                        <Weather toolResultId={toolCallId} />
+                      {/* {toolName === 'getWeather' ? (
+                        <Weather toolResult={toolInvocation as any} />
                       ) : toolName === 'createDocument' ? (
                         <DocumentPreview isReadonly={isReadonly} args={args} />
                       ) : toolName === 'updateDocument' ? (
@@ -261,7 +229,7 @@ const PurePreviewMessage = ({
                           args={args}
                           isReadonly={isReadonly}
                         />
-                      ) : null}
+                      ) : null} */}
                     </div>
                   );
                 })}
