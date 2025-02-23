@@ -98,6 +98,12 @@ export function MiddleSection({ messages, addToolResult }: { messages: Message[]
                   onClose={() => {
                     removeVisiableUI(toolResult.result.toolResultId);
                   }}
+               />
+              ) : toolResult.toolName === 'create_draft' ? (
+                <DraftInputs
+                  toolResultId={toolResult.result.toolResultId}
+                  draftData={toolResult.result.data[0]}
+                  onClose={() => removeVisiableUI(toolResult.result.toolResultId)}
                 />
               ) : (
                 <div className="flex flex-col gap-2"> */}
