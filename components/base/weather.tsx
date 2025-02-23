@@ -263,6 +263,10 @@ export function Weather({
   console.log('weather', toolResult);
   const { result } = toolResult;
 
+  if (!result) {
+    return <div>Loading...</div>;
+  }
+
   const weatherAtLocation = result.data;
 
   const [isMobile, setIsMobile] = useState(false);

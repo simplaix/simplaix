@@ -6,16 +6,16 @@ import { JiraTickets} from '@/toolbox/tools/local/jira/ui/jira-tickets';
 import { DraftInputs } from '@/toolbox/tools/local/email/ui/draft-ui/draft-inputs';
 
 type ClientTools = {
-  'getWeather': React.ComponentType<any>;
-  'createDocument': React.ComponentType<any>;
-  'updateDocument': React.ComponentType<any>;
-  'requestSuggestions': React.ComponentType<any>;
   'create_jira_issues': React.ComponentType<any>;
   'create_draft': React.ComponentType<any>;
 };
 
 type ServerTools = {
   'search_messages': React.ComponentType<any>;
+  'getWeather': React.ComponentType<any>;
+  'createDocument': React.ComponentType<any>;
+  'updateDocument': React.ComponentType<any>;
+  'requestSuggestions': React.ComponentType<any>;
 };
 
 export type ClientToolName = keyof ClientTools;
@@ -28,21 +28,14 @@ export type UIRegistry = {
 
 export const uiRegistry: UIRegistry = {
   client_tools: {
-    'getWeather': Weather,
-    'createDocument': DocumentPreview,
-    'updateDocument': DocumentToolResult,
-    'requestSuggestions': DocumentToolResult,
     'create_jira_issues': JiraTickets,
     'create_draft': DraftInputs,
   },
   server_tools: {
     'search_messages': EmailList,
+    'getWeather': Weather,
+    'createDocument': DocumentPreview,
+    'updateDocument': DocumentToolResult,
+    'requestSuggestions': DocumentToolResult,
   }
 };
-
-export const mapUIProps = (toolName: string, toolResultId: string) => {
-  return {
-    toolName,
-    toolResultId,
-  }
-}

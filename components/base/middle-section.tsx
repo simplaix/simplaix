@@ -28,7 +28,6 @@ const JSONDialog = ({ result }: { result: any }) => {
 };
 
 export function MiddleSection({ messages, addToolResult }: { messages: Message[], addToolResult: ({toolCallId, result}: {toolCallId: string; result: any}) => void }) {
-  const setSelectedEmail = useEmailStore((state) => state.setSelectedEmail);
   const visiableUIs = useUiVisiableStore((state) => state.visiableUIs);
   const removeVisiableUI = useUiVisiableStore((state) => state.removeVisiableUI);
 
@@ -50,6 +49,7 @@ export function MiddleSection({ messages, addToolResult }: { messages: Message[]
   const visibleCalls = toolCalls.filter(call => shouldShow(call.toolName, call.toolCallId));
 
   console.log('visibleCalls', visibleCalls);
+  console.log('visibleResults', visibleResults);
   if (visibleResults.length === 0 && visibleCalls.length === 0) {
     return (
       <div className="flex flex-col h-full">
@@ -66,7 +66,20 @@ export function MiddleSection({ messages, addToolResult }: { messages: Message[]
     <div className="flex flex-col h-full">
       <div className="flex-1 bg-white overflow-y-auto overflow-x-hidden">
         <div className="p-4 grid gap-4 justify-items-center">
-          {visibleResults.map((toolResult, index) => (
+          {visibleResults.map((toolResult, index) => {
+            const ToolComponent = uiRegistry.server_tools[toolResult.toolName as ServerToolName];
+            if (ToolComponent) {
+              return (
+                <div key={`${toolResult.toolName}-${index}`}>
+                  <ToolComponent 
+                    toolResult={toolResult}
+                    onClose={() => removeVisiableUI(toolResult.result.toolResultId)}
+                  />
+                </div>
+              );
+            }
+          })}
+          {/* {visibleResults.map((toolResult, index) => (
             <div key={`${toolResult.toolName}-${index}`}>
               {toolResult.toolName === 'getWeather' ? (
                 <Weather 
@@ -87,15 +100,15 @@ export function MiddleSection({ messages, addToolResult }: { messages: Message[]
                   }}
                 />
               ) : (
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col gap-2"> */}
                   {/* <pre className="text-sm text-muted-foreground overflow-x-auto whitespace-pre-wrap break-words max-w-full">
                     {JSON.stringify(toolResult.result, null, 2)}
                   </pre> */}
                   {/* <JSONDialog result={toolResult.result} /> */}
-                </div>
+                {/* </div>
               )}
             </div>
-          ))}
+          ))} */}
 
           {visibleCalls.map((toolCall, index) => {
             const ToolComponent = uiRegistry.client_tools[toolCall.toolName as ClientToolName];

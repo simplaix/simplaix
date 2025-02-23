@@ -170,8 +170,10 @@ const PurePreviewMessage = ({
                   // 从 uiRegistry 获取对应的组件
 
                   if (state === "call") {
+                    console.log('toolName in call', toolName);
                     const ToolComponent = uiRegistry.client_tools[toolName as ClientToolName];
                     if (ToolComponent) {
+                      console.log('ToolComponent in call', ToolComponent);
                       return (
                         <ToolComponent
                           key={toolCallId}
@@ -184,38 +186,17 @@ const PurePreviewMessage = ({
                   }
                   // Handle tool result UI
                   if (state === 'result') {
+                    console.log('toolName in result', toolName);
+                    const hasInlineUI = Object.keys(uiRegistry.server_tools).includes(toolName);
                     const ToolComponent = uiRegistry.server_tools[toolName as ServerToolName];
+                    console.log('ToolComponent in result', ToolComponent);
                     const { result } = toolInvocation;
                     return (
                       <div key={toolCallId}>
-                        {toolName === 'getWeather' ? (
-                          <Weather 
+                        {hasInlineUI && ToolComponent ? (
+                          <ToolComponent
                             toolResult={toolInvocation}
                             isInline={true}
-                          />
-                        ) : toolName === 'createDocument' ? (
-                          <DocumentPreview
-                            isReadonly={isReadonly}
-                            result={result}
-                          />
-                        ) : toolName === 'updateDocument' ? (
-                          <DocumentToolResult
-                            type="update"
-                            result={result}
-                            isReadonly={isReadonly}
-                          />
-                        ) : toolName === 'requestSuggestions' ? (
-                          <DocumentToolResult
-                            type="request-suggestions"
-                            result={result}
-                            isReadonly={isReadonly}
-                          />
-                        ) : toolName === 'search_messages' ? (
-                          <EmailList
-                            toolResultId={result.toolResultId}
-                            emails={result.data}
-                            isInline={true}
-                            onClose={() => {}}
                           />
                         ) : (
                           <div className="flex flex-col gap-2">
@@ -236,7 +217,7 @@ const PurePreviewMessage = ({
                         skeleton: ['getWeather'].includes(toolName),
                       })}
                     >
-                      {toolName === 'getWeather' ? (
+                      {/* {toolName === 'getWeather' ? (
                         <Weather toolResult={toolInvocation as any} />
                       ) : toolName === 'createDocument' ? (
                         <DocumentPreview isReadonly={isReadonly} args={args} />
@@ -252,7 +233,7 @@ const PurePreviewMessage = ({
                           args={args}
                           isReadonly={isReadonly}
                         />
-                      ) : null}
+                      ) : null} */}
                     </div>
                   );
                 })}
