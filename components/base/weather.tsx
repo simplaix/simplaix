@@ -260,17 +260,9 @@ export function Weather({
   isInline?: boolean;
   onClose?: () => void;
 }) {
-  console.log('weather', toolResult);
-  const { result } = toolResult;
-
-  if (!result) {
-    return <div>Loading...</div>;
-  }
-
-  const weatherAtLocation = result.data;
-
   const [isMobile, setIsMobile] = useState(false);
   const addVisiableUI = useUiVisiableStore((state) => state.addVisiableUI);
+  
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768);
@@ -278,18 +270,17 @@ export function Weather({
 
     handleResize();
     window.addEventListener('resize', handleResize);
-
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  if (isInline) {
-    return (
-      <InlineWeather
-        weatherAtLocation={weatherAtLocation}
-        onClick={() => addVisiableUI(result.toolResultId)}
-      />
-    );
+  if (!toolResult || !toolResult.result) {
+    return null;
   }
+
+  const { result } = toolResult;
+  const weatherAtLocation = result.data;
+
+  console.log('weather', toolResult);
 
   const currentHigh = Math.max(
     ...weatherAtLocation.hourly.temperature_2m.slice(0, 24)
@@ -317,6 +308,15 @@ export function Weather({
     currentTimeIndex,
     currentTimeIndex + hoursToShow
   );
+
+  if (isInline) {
+    return (
+      <InlineWeather
+        weatherAtLocation={weatherAtLocation}
+        onClick={() => addVisiableUI(result.toolResultId)}
+      />
+    );
+  }
 
   return (
     <UIContainer onClose={onClose} title={COMPONENT_NAME}>
