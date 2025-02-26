@@ -10,27 +10,31 @@ import { EmailCard } from './email-card';
 import { MailDisplay } from './email-display';
 import { cx } from 'class-variance-authority';
 import { useUiVisiableStore } from '@/toolbox/stores/uiVisiableStore';
+import { ToolResult } from 'ai';
 
 const UITitle = 'Email Search Results';
 interface EmailListProps {
-  emails: EmailResult[];
-  toolResultId: string;
+  toolResult: ToolResult<string, string, any>;
   selectedId?: string;
   isInline?: boolean;
   onClose: () => void;
 }
 
 export function InlineEmailList({
-  emails,
+  toolResult,
   onClick,
-  toolResultId,
 }: {
-  emails: EmailResult[];
+  toolResult: ToolResult<string, string, any>;
   onClick?: () => void;
-  toolResultId: string;
 }) {
-  const showEmailUI = useUiVisiableStore((state) => state.visiableUIs.has(toolResultId));
-  if (!emails.length) return null;
+  console.log('toolResult from inline email list', toolResult);
+  if (!toolResult || !toolResult.result) {
+    return null;
+  }
+  const { result } = toolResult;
+  const emails = result.data;
+  const showEmailUI = useUiVisiableStore((state) => state.visiableUIs.has(result.toolResultId));
+  if (!emails?.length) return null;
   return (
     <Button
       onClick={onClick}
@@ -51,27 +55,27 @@ export function InlineEmailList({
 }
 
 export function EmailList({
-  toolResultId,
-  emails,
+  toolResult,
   isInline = false,
   onClose,
 }: EmailListProps) {
+  const { result } = toolResult;
+  const emails = result.data;
   const selectedEmail = useEmailStore((state) => state.selectedEmail);
   const setSelectedEmail = useEmailStore((state) => state.setSelectedEmail);
   const addVisiableUI = useUiVisiableStore((state) => state.addVisiableUI);
 
   const onSelect = (email: EmailResult) => {
     setSelectedEmail(email);
-    addVisiableUI(toolResultId);
+    addVisiableUI(result.toolResultId);
   }
 
   if (isInline) {
     return (
       <InlineEmailList
-        emails={emails}
-        toolResultId={toolResultId}
+        toolResult={toolResult}
         onClick={() => {
-          addVisiableUI(toolResultId);
+          addVisiableUI(result.toolResultId);
         }}
       />
     );
@@ -83,7 +87,7 @@ export function EmailList({
         <div className= "flex flex-1 min-w-[200px]">
           <ScrollArea>
             <div className="flex flex-col gap-2">
-              {emails.map((email) => (
+              {emails?.map((email: EmailResult) => (
                 <EmailCard
                   key={email.id}
                   email={email}
@@ -91,7 +95,7 @@ export function EmailList({
                   onSelect={(email) => onSelect?.(email)}
                   onMailDisplay={(email) => setSelectedEmail(email)}
                 />
-              ))}
+              )) || <div className="text-center text-gray-500">No emails found</div>}
             </div>
             <ScrollBar orientation="vertical" />
           </ScrollArea>
