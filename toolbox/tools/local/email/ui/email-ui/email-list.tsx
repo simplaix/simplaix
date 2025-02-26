@@ -83,10 +83,10 @@ export function EmailList({
 
   return (
     <UIContainer onClose={onClose} title={UITitle}>
-      <div className="flex flex-row">
-        <div className= "flex flex-1 min-w-[200px]">
-          <ScrollArea>
-            <div className="flex flex-col gap-2">
+      <div className="flex flex-row gap-1">
+        <div className="flex min-w-[300px]">
+          <ScrollArea className="h-full">
+            <div className="flex flex-col gap-2 p-2 max-w-[600px]">
               {emails?.map((email: EmailResult) => (
                 <EmailCard
                   key={email.id}
@@ -101,10 +101,10 @@ export function EmailList({
           </ScrollArea>
         </div>
         {selectedEmail && (
-        <div className="flex border rounded-lg flex-1">
+        <div className="flex flex-1 border rounded-lg h-full">
           <MailDisplay mail={selectedEmail} />
         </div>
-      )}
+        )}
       </div>
     </UIContainer>
   );
