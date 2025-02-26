@@ -33,7 +33,8 @@ export function mapToolToToolset(
     };
   }
 
-  if (toolName === 'server_tool_create_jira_issues' || toolName === 'server_tool_create_draft') {
+  console.log('clientTools', clientTools, 'serverTools', serverTools);
+  if (clientTools.includes(toolName) && !serverTools.includes(toolName)) {
     return {
       description: tool.description || '',
       parameters: jsonSchema(tool.inputSchema) as any,
