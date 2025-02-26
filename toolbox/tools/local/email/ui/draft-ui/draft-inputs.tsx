@@ -75,7 +75,7 @@ export function DraftInputs({
       setIsSending(true);
       addToolResult({
         toolCallId: toolCallId,
-        result: "User has confirmed the draft, now send this email."
+        result: "User has confirmed the draft, continue."
       });
       // TODO: send email here
 
