@@ -4,21 +4,31 @@ import { createMCPClient } from "./mcp/client";
 import { validateMCPServers, loadToolConfig } from "./mcp/servers";
 import { mapToolToToolset } from "./mcp/toolMapper";
 import { ToolSet, ToolSetConfig } from "./mcp/types";
-
+import { UIRegistry, uiRegistry, ClientToolName, ServerToolName } from "./base/ui";
 export class ToolManager {
   private toolset: ToolSet;
   private config!: ToolSetConfig;
+  private uiRegistry: UIRegistry;
 
   constructor() {
     this.toolset = { tools: {}, clients: {} };
+    this.uiRegistry = uiRegistry;
   }
-
+  
   getToolNames() {
     return Object.keys(this.toolset.tools);
   }
 
   getTools() {
     return this.toolset.tools;
+  }
+
+  isClientTool(toolName: string) {
+    return Object.keys(this.uiRegistry.client_tools).includes(toolName);
+  }
+
+  isServerTool(toolName: string) {
+    return Object.keys(this.uiRegistry.server_tools).includes(toolName);
   }
 
   async loadTools(
