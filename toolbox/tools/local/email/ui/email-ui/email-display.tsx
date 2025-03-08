@@ -42,12 +42,14 @@ import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 interface MailDisplayProps {
   mail: EmailResult | null;
 }
+import { Letter } from 'react-letter';
+
 
 export function MailDisplay({ mail }: MailDisplayProps) {
   const today = new Date()
 
   return (
-    <div className="flex size-full flex-col">
+    <div className="flex flex-col h-full overflow-hidden">
       <div className="flex items-center p-2">
         <div className="flex items-center gap-2">
           <Tooltip>
@@ -185,7 +187,7 @@ export function MailDisplay({ mail }: MailDisplayProps) {
       </div>
       <Separator />
       {mail ? (
-        <div id="email-display" className="flex flex-1 flex-col">
+        <div id="email-display" className="flex flex-1 flex-col min-h-0 overflow-hidden">
           <div className="flex items-start p-4">
             <div className="flex items-start gap-4 text-sm">
               <Avatar>
@@ -212,40 +214,10 @@ export function MailDisplay({ mail }: MailDisplayProps) {
             )}
           </div>
           <Separator />
-          <ScrollArea className="h-[600px]">  
-          <div
-            className="flex flex-1 overflow-hidden p-4 text-sm w-full break-words max-w-full [&_img]:max-w-full [&_img]:h-auto [&_*]:max-w-full md:px-6 lg:px-8"
-            dangerouslySetInnerHTML={{ __html: mail.htmlBody }}
-          />
-           <ScrollBar orientation="vertical" className="h-full" />
+          <ScrollArea className="flex-1 min-h-0">
+            <Letter className="p-4 text-sm break-words md:px-6 lg:px-8 [&_img]:max-w-full [&_img]:h-auto [&_table]:w-full [&_td]:break-words [&_td]:p-2" html={mail.htmlBody} />
+            <ScrollBar orientation="vertical" />
           </ScrollArea>
-          <Separator className="mt-auto" />
-          <div className="p-4">
-            <form>
-              <div className="grid gap-4">
-                <Textarea
-                  className="p-4"
-                  placeholder={`Reply ${mail.from}...`}
-                />
-                <div className="flex items-center">
-                  <Label
-                    htmlFor="mute"
-                    className="flex items-center gap-2 text-xs font-normal"
-                  >
-                    <Switch id="mute" aria-label="Mute thread" /> Mute this
-                    thread
-                  </Label>
-                  <Button
-                    onClick={(e) => e.preventDefault()}
-                    size="sm"
-                    className="ml-auto"
-                  >
-                    Send
-                  </Button>
-                </div>
-              </div>
-            </form>
-          </div>
         </div>
       ) : (
         <div className="p-8 text-center text-muted-foreground">

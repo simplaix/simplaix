@@ -262,7 +262,7 @@ export function Weather({
 }) {
   const [isMobile, setIsMobile] = useState(false);
   const addVisiableUI = useUiVisiableStore((state) => state.addVisiableUI);
-  
+
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768);
@@ -322,7 +322,7 @@ export function Weather({
     <UIContainer onClose={onClose} title={COMPONENT_NAME}>
       <div
         className={cx(
-          'flex flex-col gap-4 rounded-2xl p-4 skeleton-bg max-w-[500px]',
+          'flex flex-col gap-4 rounded-2xl p-4 skeleton-bg w-full',
           {
             'bg-blue-400': isDay,
             'bg-indigo-900': !isDay,

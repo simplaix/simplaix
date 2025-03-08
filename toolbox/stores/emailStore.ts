@@ -11,7 +11,7 @@ interface EmailStore {
 export const useEmailStore = create<EmailStore>((set) => ({
   showEmailUI: false,
   selectedEmail: null,
-  setShowEmailUI: (show) => set({ showEmailUI: show }), 
+  setShowEmailUI: (show) => set({ showEmailUI: show }),
   setSelectedEmail: (email) => set({ selectedEmail: email }),
 
-})); 
+}));

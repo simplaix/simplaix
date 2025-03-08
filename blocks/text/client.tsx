@@ -40,7 +40,7 @@ export const textBlock = new Block<'text', TextBlockMetadata>({
       });
     }
 
-    if (streamPart.type === 'text-delta') { 
+    if (streamPart.type === 'text-delta') {
       setBlock((draftBlock) => {
         return {
           ...draftBlock,

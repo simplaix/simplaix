@@ -8,8 +8,9 @@ from models.email_input import EmailMessageInput
 from .account import build_gmail_service, check_gmail_token_file
 
 
-def send_message(email_message: EmailMessageInput) -> dict:
-    """Send an email message using Gmail API.
+def reply_message(email_message: EmailMessageInput) -> dict:
+    """Reply to a received email message using Gmail API.
+    Attention: The thread_id is required.
     Args:
         email_message: EmailMessageInput object
 
@@ -22,18 +23,18 @@ def send_message(email_message: EmailMessageInput) -> dict:
         )
 
     try:
-        content = email_message.content
-        to = email_message.recipients.to
-        subject = email_message.subject
         gmail_service = build_gmail_service()
         message = EmailMessage()
-        message.set_content(content)
-        message["To"] = to
-        message["Subject"] = subject
+        message.set_content(email_message.content)
+        message["To"] = email_message.recipients.to
+        message["Subject"] = email_message.subject
 
         # Encode the message
         encoded_message = base64.urlsafe_b64encode(message.as_bytes()).decode()
-        create_message = {"raw": encoded_message}
+        create_message = {
+            "raw": encoded_message,
+            "threadId": email_message.thread_id,
+        }
 
         # Send the message
         return (

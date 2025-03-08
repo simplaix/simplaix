@@ -7,4 +7,4 @@ exclude =
     venv
     data
 ignore = E501, W503, E226, E203, W605
-max-line-length = 86
+max-line-length = 79

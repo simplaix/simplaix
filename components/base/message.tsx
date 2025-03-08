@@ -160,7 +160,7 @@ const PurePreviewMessage = ({
               <div className="flex flex-col gap-4">
                 {message.toolInvocations.map((toolInvocation) => {
                   const { toolName, toolCallId, state, args } = toolInvocation;
-                  
+
                   console.log('toolInvocation', toolInvocation);
 
                   // 从 uiRegistry 获取对应的组件
@@ -169,7 +169,6 @@ const PurePreviewMessage = ({
                     console.log('toolName in call', toolName);
                     const ToolComponent = uiRegistry.client_tools[toolName as ClientToolName];
                     if (ToolComponent) {
-                      console.log('ToolComponent in call', ToolComponent);
                       return (
                         <ToolComponent
                           key={toolCallId}

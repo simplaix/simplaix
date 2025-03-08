@@ -63,15 +63,15 @@ export function MiddleSection({ messages, addToolResult }: { messages: Message[]
   }
 
   return (
-    <div className="flex flex-col h-full">
-      <div className="flex-1 bg-white overflow-y-auto overflow-x-hidden">
+    <div id="middle-section" className="flex flex-col size-full">
+      <div className="flex-1 bg-white overflow-y-auto">
         <div className="p-4 grid gap-4 justify-items-center">
           {visibleResults.map((toolResult, index) => {
             const ToolComponent = uiRegistry.server_tools[toolResult.toolName as ServerToolName];
             if (ToolComponent) {
               return (
                 <div key={`${toolResult.toolName}-${index}`}>
-                  <ToolComponent 
+                  <ToolComponent
                     toolResult={toolResult}
                     onClose={() => removeVisiableUI(toolResult.result.toolResultId)}
                   />
@@ -82,7 +82,7 @@ export function MiddleSection({ messages, addToolResult }: { messages: Message[]
           {/* {visibleResults.map((toolResult, index) => (
             <div key={`${toolResult.toolName}-${index}`}>
               {toolResult.toolName === 'getWeather' ? (
-                <Weather 
+                <Weather
                   toolResult={toolResult}
                   onClose={() => removeVisiableUI(toolResult.result.toolResultId)}
                 />

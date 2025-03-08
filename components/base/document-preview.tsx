@@ -59,7 +59,7 @@ export function DocumentPreview({
       }));
     }
   }, [block.documentId, setBlock]);
-  
+
   if (block.isVisible) {
     if (result) {
       return (
