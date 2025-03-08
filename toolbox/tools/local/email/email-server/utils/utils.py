@@ -101,9 +101,12 @@ def get_gmail_credentials(
                 client_secrets_file, scopes
             )
             # Use redirect_uri=http://localhost without specifying a port
-            # This will work with the authorized redirect URI in credentials.json
+            # This will work with the authorized redirect
+            # URI in credentials.json
             try:
-                creds = flow.run_local_server(redirect_uri_trailing_slash=False)
+                creds = flow.run_local_server(
+                    redirect_uri_trailing_slash=False
+                )
                 logger.info("Authentication flow completed successfully")
             except Exception as e:
                 logger.error(f"Error during authentication flow: {e}")

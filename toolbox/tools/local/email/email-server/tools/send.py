@@ -3,8 +3,9 @@ from __future__ import annotations
 import base64
 from email.message import EmailMessage
 
-from .account import build_gmail_service, check_gmail_token_file
 from models.email_input import EmailMessageInput
+
+from .account import build_gmail_service, check_gmail_token_file
 
 
 def send_message(email_message: EmailMessageInput) -> dict:
@@ -16,7 +17,9 @@ def send_message(email_message: EmailMessageInput) -> dict:
         dict: Message object, including message id
     """
     if not check_gmail_token_file():
-        raise ValueError("No valid token file found. Please login to Gmail first.")
+        raise ValueError(
+            "No valid token file found. Please login to Gmail first."
+        )
 
     try:
         content = email_message.content

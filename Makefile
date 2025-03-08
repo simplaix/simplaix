@@ -83,4 +83,4 @@ git-init:
 
 .PHONY: pre-commit
 pre-commit:
-	pre-commit run --all-files
+	cd toolbox/tools/local/email/email-server && pre-commit run --all-files

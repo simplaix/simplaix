@@ -2,9 +2,9 @@ from __future__ import annotations
 
 from mcp.server.fastmcp import FastMCP
 from tools.account import gmail_login
+from tools.reply import reply_message
 from tools.search import search_messages
 from tools.send import send_message
-from tools.reply import reply_message
 
 # Initialize FastMCP server
 mcp = FastMCP("email")

@@ -160,7 +160,7 @@ const PurePreviewMessage = ({
               <div className="flex flex-col gap-4">
                 {message.toolInvocations.map((toolInvocation) => {
                   const { toolName, toolCallId, state, args } = toolInvocation;
-                  
+
                   console.log('toolInvocation', toolInvocation);
 
                   // 从 uiRegistry 获取对应的组件

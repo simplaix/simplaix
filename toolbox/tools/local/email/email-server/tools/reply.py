@@ -3,12 +3,9 @@ from __future__ import annotations
 import base64
 from email.message import EmailMessage
 
-from .account import build_gmail_service, check_gmail_token_file
 from models.email_input import EmailMessageInput
 
-# Always call the draft tool to show the draft to human and ask for confirmation before reply the email.
-
-# TODO: llm not running draft tool, check out why, maybe it's because the draft tool need thread id as arguments
+from .account import build_gmail_service, check_gmail_token_file
 
 
 def reply_message(email_message: EmailMessageInput) -> dict:
@@ -21,7 +18,9 @@ def reply_message(email_message: EmailMessageInput) -> dict:
         dict: Message object, including message id
     """
     if not check_gmail_token_file():
-        raise ValueError("No valid token file found. Please login to Gmail first.")
+        raise ValueError(
+            "No valid token file found. Please login to Gmail first."
+        )
 
     try:
         gmail_service = build_gmail_service()
@@ -32,7 +31,10 @@ def reply_message(email_message: EmailMessageInput) -> dict:
 
         # Encode the message
         encoded_message = base64.urlsafe_b64encode(message.as_bytes()).decode()
-        create_message = {"raw": encoded_message, "threadId": email_message.thread_id}
+        create_message = {
+            "raw": encoded_message,
+            "threadId": email_message.thread_id,
+        }
 
         # Send the message
         return (

@@ -1,9 +1,10 @@
 from __future__ import annotations
 
-from jira import JIRA
 import os
+
 from dotenv import load_dotenv
-from models.ticket import JiraTicketData, JiraRequest
+from jira import JIRA
+from models.ticket import JiraRequest, JiraTicketData
 
 load_dotenv()
 

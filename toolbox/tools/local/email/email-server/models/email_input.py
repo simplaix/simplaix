@@ -4,9 +4,9 @@
 
 from __future__ import annotations
 
+import logging
 from typing import List, Optional
 
-import logging
 from pydantic import BaseModel, ConfigDict, Field
 
 logging.basicConfig(level=logging.DEBUG)
@@ -37,7 +37,7 @@ class Draft(BaseModel):
     id: str
     thread_id: Optional[str] = Field(
         default=None,
-        description="The thread id of the email, default is None for new email. For reply email, the thread id is the id of the email you want to reply to.",
+        description="The thread id of the email, default is None for new email. For reply email, the thread id is the id of the email you want to reply to.",  # noqa: E501
     )
     recipients: Recipients
     subject: str
@@ -52,7 +52,7 @@ class EmailMessageInput(BaseModel):
     id: str | None = None
     thread_id: Optional[str] = Field(
         default=None,
-        description="The thread id of the email, default is None for new email. For reply email, the thread id is the id of the email you want to reply to.",
+        description="The thread id of the email, default is None for new email. For reply email, the thread id is the id of the email you want to reply to.",  # noqa: E501
     )
     recipients: Recipients
     subject: str

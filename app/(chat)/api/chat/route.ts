@@ -91,10 +91,10 @@ export async function POST(request: Request) {
           switch (toolInvocation.result.status) {
             case 'User has confirmed the draft, continue.': {              // TODO: Make this dynamic match each tool's specific confirmation message for AI to follow
               // Use the updated email_message from the result if available
-              const args = toolInvocation.result.modified_args 
+              const args = toolInvocation.result.modified_args
                 ? { ...toolInvocation.args, ...toolInvocation.result.modified_args }
                 : toolInvocation.args;
-              
+
               console.log('args', args);
               const result = await tools[toolInvocation.toolName].callTool(args);
 
@@ -125,9 +125,9 @@ export async function POST(request: Request) {
         }
       }
 
-      
-      
-      
+
+
+
       const result = streamText({
         model: myProvider.languageModel(selectedChatModel),
         system: systemPrompt({ selectedChatModel }),

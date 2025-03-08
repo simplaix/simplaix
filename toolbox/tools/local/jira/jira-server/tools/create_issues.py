@@ -1,4 +1,6 @@
-from models.ticket import JiraTicketData, JiraRequest
+from __future__ import annotations
+
+from models.ticket import JiraRequest, JiraTicketData
 
 
 def create_jira_issues(

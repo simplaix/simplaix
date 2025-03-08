@@ -133,16 +133,16 @@ export function DraftInputs({
               />
               <Users className="size-4 absolute top-2 left-2 text-gray-500" />
             </div>
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               size="sm"
               onClick={() => setShowCc(!showCc)}
               className={showCc ? 'bg-gray-100' : ''}
             >
               Cc
             </Button>
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               size="sm"
               onClick={() => setShowBcc(!showBcc)}
               className={showBcc ? 'bg-gray-100' : ''}
