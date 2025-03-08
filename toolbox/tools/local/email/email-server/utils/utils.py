@@ -91,16 +91,27 @@ def get_gmail_credentials(
     # If there are no (valid) credentials available, let the user log in.
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
+            logger.info("Token expired. Refreshing...")
             creds.refresh(Request())
+            logger.info("Token refreshed successfully")
         else:
+            logger.info("No valid credentials found. Starting auth flow...")
             # https://developers.google.com/gmail/api/quickstart/python#authorize_credentials_for_a_desktop_application # noqa
             flow = InstalledAppFlow.from_client_secrets_file(
                 client_secrets_file, scopes
             )
-            creds = flow.run_local_server(port=0)
+            # Use redirect_uri=http://localhost without specifying a port
+            # This will work with the authorized redirect URI in credentials.json
+            try:
+                creds = flow.run_local_server(redirect_uri_trailing_slash=False)
+                logger.info("Authentication flow completed successfully")
+            except Exception as e:
+                logger.error(f"Error during authentication flow: {e}")
+                raise
         # Save the credentials for the next run
         with open(token_file, "w") as token:
             token.write(creds.to_json())
+            logger.info(f"Credentials saved to {token_file}")
     return creds
 
 
