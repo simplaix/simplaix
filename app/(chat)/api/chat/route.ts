@@ -88,10 +88,15 @@ export async function POST(request: Request) {
           toolManager.isClientTool(toolInvocation.toolName) && toolInvocation.state === 'result'
         ) {
           // switch through tool result states (set on the frontend)
-          switch (toolInvocation.result) {
-            case 'User has confirmed the draft, continue.': {
-              console.log('User has confirmed the draft, calling send_message tool.');
-              const result = await tools[toolInvocation.toolName].callTool(toolInvocation.args);
+          switch (toolInvocation.result.status) {
+            case 'User has confirmed the draft, continue.': {              // TODO: Make this dynamic match each tool's specific confirmation message for AI to follow
+              // Use the updated email_message from the result if available
+              const args = toolInvocation.result.modified_args 
+                ? { ...toolInvocation.args, ...toolInvocation.result.modified_args }
+                : toolInvocation.args;
+              
+              console.log('args', args);
+              const result = await tools[toolInvocation.toolName].callTool(args);
 
               dataStream.write(
                 formatDataStreamPart('tool_result', {

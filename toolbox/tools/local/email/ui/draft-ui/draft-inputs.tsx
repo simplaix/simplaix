@@ -77,7 +77,12 @@ export function DraftInputs({
       setIsSending(true);
       addToolResult({
         toolCallId: toolCallId,
-        result: "User has confirmed the draft, continue."
+        result: {
+          status: "User has confirmed the draft, continue.",
+          modified_args: {
+            email_message: draft
+          }
+        }
       });
       // TODO: send email here
 
