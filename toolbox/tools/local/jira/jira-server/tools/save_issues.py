@@ -26,8 +26,7 @@ def save_jira_issues(
     username = os.getenv("JIRA_USERNAME")
     # Initialize Jira client with token authentication
     print("username", username)
-    jira = JIRA(server=server,
-                basic_auth=(username, auth_token))
+    jira = JIRA(server=server, basic_auth=(username, auth_token))
 
     # Create the issue
     new_issues = []

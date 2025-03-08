@@ -44,4 +44,5 @@ export interface ToolDefinition {
   description: string;
   parameters: Schema<any>;
   execute?: (params: any) => Promise<any>;
+  callTool?: (args: any) => Promise<any>;
 }

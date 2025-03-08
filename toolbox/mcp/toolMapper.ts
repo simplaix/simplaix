@@ -1,5 +1,5 @@
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
-import { jsonSchema, DataStreamWriter } from 'ai';
+import { jsonSchema, DataStreamWriter, tool } from 'ai';
 
 import { ToolDefinition, ToolSetConfig } from './types';
 import { generateUUID } from '@/lib/utils';
@@ -30,6 +30,9 @@ export function mapToolToToolset(
     return {
       description: tool.description || '',
       parameters: jsonSchema(tool.inputSchema) as any,
+      callTool: async (args: any) => {
+        return runMCPTool(tool, args, client, streamingData, config, serverName);
+      }
     };
   }
 
@@ -38,37 +41,42 @@ export function mapToolToToolset(
     parameters: jsonSchema(tool.inputSchema) as any,
     execute: async (args: any) => {
       console.log('calling server side tool', toolName, args);
-      try {
-        const resultPromise = (async () => {
-          const toolResultId = generateUUID();
-          const result = await client.callTool({
-            name: tool.name,
-            arguments: args,
-          });
-          if (result.isError) {
-            console.error('Error in calling tool from server', toolName, result.content);
-            return (result.content as { text: string }[])[0].text;
-          }
-          const parsedResult = parseResult(result);
-
-          streamingData.writeData({
-            type: `${toolName}_result`,
-            content: parsedResult,
-          });
-          return {toolResultId, data:parsedResult};
-        })();
-
-        if (config.onCallTool) {
-          config.onCallTool(serverName, toolName, args, resultPromise as Promise<string>);
-        }
-
-        return resultPromise;
-      } catch (error) {
-        console.error('Error in running tool', toolName, error);
-        throw new Error(
-          `Error in running tool ${toolName}: ${(error as Error).message}`
-        );
-      }
+      return runMCPTool(tool, args, client, streamingData, config, serverName);
     },
   };
+}
+
+export function runMCPTool(tool: any, args: any, client: Client, streamingData: DataStreamWriter, config: ToolSetConfig, serverName: string) {
+  try {
+    const resultPromise = (async () => {
+      const toolResultId = generateUUID();
+      console.log('calling MCP tool', tool.name, args);
+      const result = await client.callTool({
+        name: tool.name,
+        arguments: args,
+      });
+      if (result.isError) {
+        console.error('Error in calling tool from server', tool.name, result.content);
+        return (result.content as { text: string }[])[0].text;
+      }
+      const parsedResult = parseResult(result);
+
+      streamingData.writeData({
+        type: `${tool.name}_result`,
+        content: parsedResult,
+      });
+      return {toolResultId, data:parsedResult};
+    })();
+
+    if (config.onCallTool) {
+      config.onCallTool(serverName, tool.name, args, resultPromise as Promise<string>);
+    }
+
+    return resultPromise;
+  } catch (error) {
+    console.error('Error in running tool', tool.name, error);
+    throw new Error(
+      `Error in running tool ${tool.name}: ${(error as Error).message}`
+    );
+  }
 }

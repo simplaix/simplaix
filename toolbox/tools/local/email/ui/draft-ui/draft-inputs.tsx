@@ -57,9 +57,11 @@ export function DraftInputs({
   isInline?: boolean;
   addToolResult: ({toolCallId, result}: {toolCallId: string; result: any}) => void;
 }) {
+  console.log('toolInvocation in draft inputs', toolInvocation);
+
   const { toolName, toolCallId, state, args } = toolInvocation;
   const removeVisiableUI = useUiVisiableStore((state) => state.removeVisiableUI);
-  const draftData = args.draft;
+  const draftData = args.email_message;
 
   const [draft, setDraft] = useState(draftData);
   const [isSending, setIsSending] = useState(false);

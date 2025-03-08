@@ -1,6 +1,7 @@
 import {
-  type Message,
+  Message,
   createDataStreamResponse,
+  formatDataStreamPart,
   smoothStream,
   streamText,
 } from 'ai';
@@ -72,6 +73,50 @@ export async function POST(request: Request) {
 
       const tools = toolManager.getTools();
       console.log('tools', Object.keys(tools));
+
+
+      // pull out last message
+      const lastMessage = messages[messages.length - 1];
+
+      // console.log('lastMessage', lastMessage);
+      console.log('lastMessage.parts', lastMessage);
+      const toolInvocation = lastMessage.toolInvocations?.[0];
+
+      if (toolInvocation) {
+
+        // return if tool isn't weather tool or in a result state
+      if (
+        (toolInvocation.toolName === 'send_message' || toolInvocation.toolName === 'reply_message') &&
+        toolInvocation.state === 'result'
+      ) {
+        // switch through tool result states (set on the frontend)
+        switch (toolInvocation.result) {
+          case 'User has confirmed the draft, continue.': {
+            console.log('User has confirmed the draft, calling send_message tool.');
+            const result = await tools[toolInvocation.toolName].callTool(toolInvocation.args);
+
+            dataStream.write(
+              formatDataStreamPart('tool_result', {
+                toolCallId: toolInvocation.toolCallId,
+                result,
+              }),
+            );
+            // update the message part:
+            return { ...lastMessage, toolInvocation: { ...toolInvocation, result } };
+        }
+        case 'No, denied.': {
+          console.log('No, denied.');
+          // update the message part:
+          return { ...lastMessage, toolInvocation: { ...toolInvocation, result: "No, denied." } };
+        }
+        default:
+            return lastMessage;
+          }
+        }
+      }
+
+      
+      
       
       const result = streamText({
         model: myProvider.languageModel(selectedChatModel),

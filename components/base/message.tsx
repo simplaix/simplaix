@@ -169,7 +169,6 @@ const PurePreviewMessage = ({
                     console.log('toolName in call', toolName);
                     const ToolComponent = uiRegistry.client_tools[toolName as ClientToolName];
                     if (ToolComponent) {
-                      console.log('ToolComponent in call', ToolComponent);
                       return (
                         <ToolComponent
                           key={toolCallId}
