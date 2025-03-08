@@ -83,8 +83,8 @@ export function Chat({
   // Check if any message has tool invocations
   useEffect(() => {
     const hasToolInvocations = messages.some(
-      message => message.role === 'assistant' && 
-      message.toolInvocations && 
+      message => message.role === 'assistant' &&
+      message.toolInvocations &&
       message.toolInvocations.length > 0
     );
     setShowMiddleSection(hasToolInvocations);
@@ -108,12 +108,12 @@ export function Chat({
           {showMiddleSection && (
             <motion.div
               initial={{ width: 0, opacity: 0 }}
-              animate={{ 
+              animate={{
                 width: '100%',
-                opacity: 1 
+                opacity: 1
               }}
               exit={{ width: 0, opacity: 0 }}
-              transition={{ 
+              transition={{
                 type: 'spring',
                 stiffness: 100,
                 damping: 20,
@@ -132,8 +132,8 @@ export function Chat({
         <motion.div
           className="flex flex-col min-w-[600px] h-dvh bg-background"
           style={{
-            width: showMiddleSection ? 
-              windowWidth > 768 ? '40%' : '0%' : 
+            width: showMiddleSection ?
+              windowWidth > 768 ? '40%' : '0%' :
               '100%',
             maxWidth: showMiddleSection ? '700px' : '100%'
           }}

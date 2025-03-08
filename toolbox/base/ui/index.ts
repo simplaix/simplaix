@@ -7,7 +7,8 @@ import { DraftInputs } from '@/toolbox/tools/local/email/ui/draft-ui/draft-input
 
 type ClientTools = {
   'create_jira_issues': React.ComponentType<any>;
-  'create_draft': React.ComponentType<any>;
+  'send_message': React.ComponentType<any>;
+  'reply_message': React.ComponentType<any>;
 };
 
 type ServerTools = {
@@ -29,7 +30,8 @@ export type UIRegistry = {
 export const uiRegistry: UIRegistry = {
   client_tools: {
     'create_jira_issues': JiraTickets,
-    'create_draft': DraftInputs,
+    'send_message': DraftInputs,
+    'reply_message': DraftInputs,
   },
   server_tools: {
     'search_messages': EmailList,

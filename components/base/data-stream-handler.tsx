@@ -105,10 +105,10 @@ export function DataStreamHandler({ id }: { id: string }) {
   }, [dataStream, setBlock, setMetadata, block]);
 
   useEffect(() => {
-    const emailItems = dataStream?.filter(item => 
-      typeof item === 'object' && 
-      item !== null && 
-      'type' in item && 
+    const emailItems = dataStream?.filter(item =>
+      typeof item === 'object' &&
+      item !== null &&
+      'type' in item &&
       item.type === 'email' &&
       'data' in item
     );
@@ -122,7 +122,7 @@ export function DataStreamHandler({ id }: { id: string }) {
   return (
     <>
       {emailData && (
-        <EmailList 
+        <EmailList
           emails={emailData}
           isExpanded={emailListOpen}
           onClose={() => setEmailListOpen(false)}

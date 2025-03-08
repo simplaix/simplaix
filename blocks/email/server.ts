@@ -8,4 +8,4 @@ export const emailDocumentHandler = createDocumentHandler<'email'>({
   onUpdateDocument: async ({ document, description, dataStream }) => {
     return document.content;
   },
-}); 
+});

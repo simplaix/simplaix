@@ -57,9 +57,11 @@ export function DraftInputs({
   isInline?: boolean;
   addToolResult: ({toolCallId, result}: {toolCallId: string; result: any}) => void;
 }) {
+  console.log('toolInvocation in draft inputs', toolInvocation);
+
   const { toolName, toolCallId, state, args } = toolInvocation;
   const removeVisiableUI = useUiVisiableStore((state) => state.removeVisiableUI);
-  const draftData = args.draft;
+  const draftData = args.email_message;
 
   const [draft, setDraft] = useState(draftData);
   const [isSending, setIsSending] = useState(false);
@@ -75,7 +77,12 @@ export function DraftInputs({
       setIsSending(true);
       addToolResult({
         toolCallId: toolCallId,
-        result: "User has confirmed the draft, now send this email."
+        result: {
+          status: "User has confirmed the draft, continue.",
+          modified_args: {
+            email_message: draft
+          }
+        }
       });
       // TODO: send email here
 
@@ -126,16 +133,16 @@ export function DraftInputs({
               />
               <Users className="size-4 absolute top-2 left-2 text-gray-500" />
             </div>
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               size="sm"
               onClick={() => setShowCc(!showCc)}
               className={showCc ? 'bg-gray-100' : ''}
             >
               Cc
             </Button>
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               size="sm"
               onClick={() => setShowBcc(!showBcc)}
               className={showBcc ? 'bg-gray-100' : ''}

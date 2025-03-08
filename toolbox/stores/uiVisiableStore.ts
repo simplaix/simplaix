@@ -17,4 +17,3 @@ export const useUiVisiableStore = create<UiVisiableStore>((set) => ({
     return { visiableUIs: newChecked };
   }),
 }));
-

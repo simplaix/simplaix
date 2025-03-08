@@ -48,4 +48,4 @@ export const emailBlock = new Block<'email', EmailBlockMetadata>({
   },
   actions: [],
   toolbar: [],
-}); 
+});

@@ -1,6 +1,7 @@
 import {
-  type Message,
+  Message,
   createDataStreamResponse,
+  formatDataStreamPart,
   smoothStream,
   streamText,
 } from 'ai';
@@ -65,14 +66,68 @@ export async function POST(request: Request) {
   }
 
   return createDataStreamResponse({
-    execute: async (dataStream) => {
+    execute: async (dataStream): Promise<void> => {
       // Load mcp tools
       const toolManager = new ToolManager();
       await toolManager.loadTools(dataStream);
 
       const tools = toolManager.getTools();
       console.log('tools', Object.keys(tools));
-      
+
+
+      // pull out last message
+      const lastMessage = messages[messages.length - 1];
+
+      // console.log('lastMessage', lastMessage);
+      console.log('lastMessage', lastMessage);
+      const toolInvocation = lastMessage.toolInvocations?.[0];
+
+      if (toolInvocation) {
+        // return if tool isn't weather tool or in a result state
+        if (
+          toolManager.isClientTool(toolInvocation.toolName) && toolInvocation.state === 'result'
+        ) {
+          // switch through tool result states (set on the frontend)
+          switch (toolInvocation.result.status) {
+            case 'User has confirmed the draft, continue.': {              // TODO: Make this dynamic match each tool's specific confirmation message for AI to follow
+              // Use the updated email_message from the result if available
+              const args = toolInvocation.result.modified_args
+                ? { ...toolInvocation.args, ...toolInvocation.result.modified_args }
+                : toolInvocation.args;
+
+              console.log('args', args);
+              const result = await tools[toolInvocation.toolName].callTool(args);
+
+              dataStream.write(
+                formatDataStreamPart('tool_result', {
+                  toolCallId: toolInvocation.toolCallId,
+                  result,
+                }),
+              );
+              // update the message part:
+              const updatedMessage = { ...lastMessage, toolInvocation: { ...toolInvocation, result } };
+              // Process the updated message if needed
+              break;
+            }
+            case 'No, denied.': {
+              console.log('No, denied.');
+              // update the message part:
+              const updatedMessage = { ...lastMessage, toolInvocation: { ...toolInvocation, result: "No, denied." } };
+              // Process the updated message if needed
+              break;
+            }
+            default:
+              const updatedMessage = lastMessage;
+              // Process the updated message if needed
+              break;
+          }
+          return;
+        }
+      }
+
+
+
+
       const result = streamText({
         model: myProvider.languageModel(selectedChatModel),
         system: systemPrompt({ selectedChatModel }),

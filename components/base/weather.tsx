@@ -262,7 +262,7 @@ export function Weather({
 }) {
   const [isMobile, setIsMobile] = useState(false);
   const addVisiableUI = useUiVisiableStore((state) => state.addVisiableUI);
-  
+
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768);

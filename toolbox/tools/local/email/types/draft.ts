@@ -3,6 +3,7 @@ import { zodToJsonSchema } from "zod-to-json-schema";
 
 export const DraftSchema = z.object({
   id: z.string(),
+  thread_id: z.string().optional(),
   recipients: z.object({
     to: z.array(z.string()),
     cc: z.array(z.string()).optional(),

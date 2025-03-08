@@ -42,7 +42,7 @@ export function InlineEmailList({
         'flex flex-row gap-4 rounded-2xl p-4 bg-gray-100 hover:bg-gray-100 max-w-[300px] h-auto border border-gray-200 text-black'
       )}
     >
-      <div className="flex flex-col"> 
+      <div className="flex flex-col">
         <div className="text-sm font-medium text-gray-900">
           {emails.length} emails found
         </div>

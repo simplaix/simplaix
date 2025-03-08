@@ -71,7 +71,7 @@ export function MiddleSection({ messages, addToolResult }: { messages: Message[]
             if (ToolComponent) {
               return (
                 <div key={`${toolResult.toolName}-${index}`}>
-                  <ToolComponent 
+                  <ToolComponent
                     toolResult={toolResult}
                     onClose={() => removeVisiableUI(toolResult.result.toolResultId)}
                   />
@@ -82,7 +82,7 @@ export function MiddleSection({ messages, addToolResult }: { messages: Message[]
           {/* {visibleResults.map((toolResult, index) => (
             <div key={`${toolResult.toolName}-${index}`}>
               {toolResult.toolName === 'getWeather' ? (
-                <Weather 
+                <Weather
                   toolResult={toolResult}
                   onClose={() => removeVisiableUI(toolResult.result.toolResultId)}
                 />
